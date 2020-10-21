@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 // MARK: - Define
 struct SearchNotificationName {
@@ -26,11 +27,42 @@ final class SearchDataManager: NSObject {
     
     
     // MARK: Private
+    private lazy var coreDataStack: BookCoreDataStack = {
+        let coreDataStack = BookCoreDataStack()
+        return coreDataStack
+    }()
+
+    
     private var keywordWorkItem: DispatchWorkItem?    = nil
     private var paginationWorkItem: DispatchWorkItem? = nil
     
     private var keywordCache: String? = nil
     private var currentPage: UInt     = 0
+    
+    private var searchedKeywords: Set<String> {
+        set {
+            guard newValue.isEmpty == false else { return }
+            let array = newValue.map { $0 }
+            UserDefaults.standard.set(array, forKey: UserDefaultsKey.searchedKeywords)
+        }
+        
+        get {
+            let array = UserDefaults.standard.array(forKey: UserDefaultsKey.searchedKeywords) as? [String] ?? []
+            return Set(array)
+        }
+    }
+    
+    
+    
+    // MARK: - Initializer
+    override init() {
+        super.init()
+       
+        coreDataStack.loadPersistentStores { error in
+            guard let error = error else { return }
+            log(.error, error.localizedDescription)
+        }
+    }
     
     
     
@@ -43,7 +75,11 @@ final class SearchDataManager: NSObject {
         keywordCache = nil
 
         // Set workItem
-        let workItem = DispatchWorkItem { self.requestAutocompletes() }
+        let workItem = DispatchWorkItem {
+            guard self.loadResult() == false else { return }
+            self.requestAutocompletes()
+        }
+        
         keywordWorkItem = workItem
         
         
@@ -63,6 +99,44 @@ final class SearchDataManager: NSObject {
         DispatchQueue.main.async(execute: workItem)
     }
     
+    func cache() {
+        guard let keyword = keyword else {
+            log(.error, "Failed to cache the result.")
+            return
+        }
+        
+        // Remove the loading data
+        var autocompletes = self.autocompletes
+        if autocompletes.last is LoadingAutocomplete {
+            autocompletes.removeLast()
+        }
+        
+        
+        // Save
+        guard let bookAutocompletes = autocompletes as? [BookAutocomplete] else {
+            log(.error, "Failed to cache the result. keyword: \(keyword)")
+            return
+        }
+        
+        for autocomplete in bookAutocompletes {
+            let entity = BookEntity(context: coreDataStack.managedContext)
+            entity.keyword  = keyword
+            entity.title    = autocomplete.title
+            entity.subtitle = autocomplete.subtitle
+            entity.price    = autocomplete.price
+            entity.isbn     = autocomplete.isbn
+            entity.imageURL = autocomplete.imageURL
+            entity.url      = autocomplete.url
+        }
+        
+        coreDataStack.saveContext()
+        
+        
+        // Insert the keyword
+        var keywords = searchedKeywords
+        keywords.insert(keyword)
+        searchedKeywords = keywords
+    }
     
     // MARK: Private
     @discardableResult
@@ -180,6 +254,36 @@ final class SearchDataManager: NSObject {
                 errorDetail = ResponseDetail(message: error.localizedDescription)
                 return
             }
+        }
+    }
+    
+    private func loadResult() -> Bool {
+        guard let keyword = keyword?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed), keyword != "", searchedKeywords.contains(keyword) == true else { return false }
+        
+        let request: NSFetchRequest<BookEntity> = BookEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "%K BEGINSWITH %@", #keyPath(BookEntity.keyword), keyword)
+
+        do {
+            let result = try self.coreDataStack.managedContext.fetch(request)
+            
+            DispatchQueue.global().async {
+                let autocompletes = result.map { BookAutocomplete(data: $0) }
+                
+                DispatchQueue.main.async {
+                    self.autocompletes = autocompletes
+                    self.currentPage   = 1
+                    self.totalCount    = UInt(autocompletes.count)
+                    self.keywordCache  = keyword
+                    
+                    NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: nil)
+                }
+            }
+
+            return true
+            
+        } catch {
+            log(.error, error.localizedDescription)
+            return false
         }
     }
 }

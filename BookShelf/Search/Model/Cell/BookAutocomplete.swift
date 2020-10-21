@@ -26,4 +26,13 @@ extension BookAutocomplete {
         imageURL = data.imageURL
         url      = data.url
     }
+    
+    init(data: BookEntity) {
+        title    = data.title ?? ""
+        subtitle = data.subtitle
+        price    = data.price ?? ""
+        isbn     = data.isbn ?? ""
+        imageURL = data.imageURL
+        url      = data.url
+    }
 }

@@ -249,6 +249,9 @@ extension SearchViewController: SegueHandlerType {
             }
             
             viewController.dataManager.isbn = sender as? String
+            
+            // Cache
+            dataManager.cache()
         }
     }
 }
