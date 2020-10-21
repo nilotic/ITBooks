@@ -23,6 +23,7 @@ final class DetailViewController: UIViewController {
     @IBOutlet private var textView: UITextView!
     @IBOutlet private var imageActivityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet private var textViewToolbar: UIToolbar!
     
     @IBOutlet private var scrollViewBottomConstraint: NSLayoutConstraint!
     
@@ -59,9 +60,10 @@ final class DetailViewController: UIViewController {
     private func setTextView() {
         textView.layer.cornerRadius = 4.0
         textView.layer.borderWidth  = 1.0
-        textView.layer.borderColor  = #colorLiteral(red: 0.9215686275, green: 0.9215686275, blue: 0.9215686275, alpha: 1)
+        textView.layer.borderColor  = UIColor(named: "subtitle")?.cgColor
         
         textView.textContainerInset = UIEdgeInsets(top: 14.0, left: 9.0, bottom: 16.0, right: 9.0)
+        textView.inputAccessoryView = textViewToolbar
     }
     
     private func update() {
@@ -185,13 +187,18 @@ final class DetailViewController: UIViewController {
     
     @objc private func didReceiveKeyboardWillShow(notification: Notification) {
         scrollViewBottomConstraint.constant = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect ?? .zero).height
+        
         DispatchQueue.main.async { self.view.layoutIfNeeded() }
     }
     
     @objc private func didReceiveKeyboardWillHide(notification: Notification) {
         scrollViewBottomConstraint.constant = 0
-        DispatchQueue.main.async { self.view.layoutIfNeeded() }
+        
+        UIView.animate(withDuration: 0.38) {
+            self.view.layoutIfNeeded()
+        }
     }
+    
     
     
     // MARK: - Event
@@ -209,6 +216,16 @@ final class DetailViewController: UIViewController {
     @IBAction private func backBarButtonItemAction(_ sender: UIBarButtonItem) {
         DispatchQueue.main.async { self.navigationController?.popViewController(animated: true) }
     }
+    
+    // MARK: TextView Done
+    @IBAction private func doneBarButtonItemAction(_ sender: UIBarButtonItem) {
+        textView.endEditing(true)
+    }
+    
+    // MARK: Tap Gesture Recognizer
+    @IBAction private func tapGestureRecognizerAction(_ sender: UITapGestureRecognizer) {
+        textView.endEditing(true)
+    }
 }
 
 
@@ -217,13 +234,24 @@ final class DetailViewController: UIViewController {
 extension DetailViewController: UITextViewDelegate {
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        DispatchQueue.main.async {
-            self.scrollView.setContentOffset(CGPoint(x: 0, y: self.scrollView.contentSize.height - textView.frame.height), animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.scrollView.setContentOffset(CGPoint(x: 0, y: self.scrollView.contentSize.height - self.scrollView.frame.height), animated: true)
         }
+        
         return true
     }
     
     func textViewDidChange(_ textView: UITextView) {
         dataManager.note = textView.text
+    }
+}
+
+
+
+// MARK: - UIGestureRecognizer Delegate
+extension DetailViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return textView.frame.contains(touch.location(in: view)) == false
     }
 }

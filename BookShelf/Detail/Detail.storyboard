@@ -209,6 +209,9 @@
                             <constraint firstItem="9Bk-Qh-s3N" firstAttribute="top" secondItem="xyq-48-sk8" secondAttribute="top" id="lM6-cM-ax0"/>
                             <constraint firstItem="UZB-fp-9Ih" firstAttribute="height" secondItem="xyq-48-sk8" secondAttribute="height" priority="250" id="mmr-TK-YaE"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="6Xi-Wi-ptJ" appends="YES" id="xo1-jn-TUJ"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Detail" id="9h4-AK-1rD">
                         <barButtonItem key="leftBarButtonItem" image="chevron.backward" catalog="system" style="done" id="EX4-RL-08p">
@@ -233,10 +236,29 @@
                         <outlet property="scrollViewBottomConstraint" destination="IYD-wA-Aaa" id="uLa-mS-PBo"/>
                         <outlet property="subtitleLabel" destination="zkW-EE-aUG" id="ihV-eD-RUH"/>
                         <outlet property="textView" destination="neX-Gp-K1C" id="Pno-FV-f9l"/>
+                        <outlet property="textViewToolbar" destination="V8r-D8-93e" id="KUv-Vj-V3q"/>
                         <outlet property="titleLabel" destination="vN6-3z-A7A" id="W6A-38-NI0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="l9g-ec-DtY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="V8r-D8-93e">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <items>
+                        <barButtonItem style="done" systemItem="flexibleSpace" id="Ytj-IN-kgh"/>
+                        <barButtonItem title="Done" style="done" id="c9d-Ha-T4I">
+                            <connections>
+                                <action selector="doneBarButtonItemAction:" destination="4Rb-dd-cXx" id="S7F-9i-4cl"/>
+                            </connections>
+                        </barButtonItem>
+                    </items>
+                </toolbar>
+                <tapGestureRecognizer id="6Xi-Wi-ptJ">
+                    <connections>
+                        <action selector="tapGestureRecognizerAction:" destination="4Rb-dd-cXx" id="ayV-Vv-SMZ"/>
+                        <outlet property="delegate" destination="4Rb-dd-cXx" id="tka-SI-cj4"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="387" y="171"/>
         </scene>
