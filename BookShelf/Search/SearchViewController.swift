@@ -196,6 +196,30 @@ extension SearchViewController: UITableViewDelegate {
             return
         }
     }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        guard indexPath.row < dataManager.autocompletes.count else { return false }
+        
+        switch dataManager.autocompletes[indexPath.row] {
+        case is KeywordAutocomplete:    return true
+        default:                        return false
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        switch editingStyle {
+        case .delete:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                guard self.dataManager.delete(indexPath: indexPath) == true else {
+                    Toast.show(message: NSLocalizedString("Sorry there has been a temporary error. Please refresh and try again.", comment: ""))
+                    return
+                }
+            }
+            
+        default:
+            break
+        }
+    }
 }
 
 
@@ -271,9 +295,6 @@ extension SearchViewController: SegueHandlerType {
             }
             
             viewController.dataManager.isbn = sender as? String
-            
-            // Cache
-            dataManager.cache()
         }
     }
 }
