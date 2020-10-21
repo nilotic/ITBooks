@@ -21,7 +21,7 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="828"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UZB-fp-9Ih">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="811"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="823"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iCK-fB-Wsk">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="207"/>
@@ -107,8 +107,8 @@
                                                 <color key="textColor" name="title"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="Comments" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="neX-Gp-K1C">
-                                                <rect key="frame" x="15" y="646" width="384" height="150"/>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="neX-Gp-K1C">
+                                                <rect key="frame" x="20" y="653" width="374" height="150"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="150" id="55o-rq-PPe"/>
@@ -116,6 +116,9 @@
                                                 <color key="textColor" name="title"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="4Rb-dd-cXx" id="BdK-fW-44H"/>
+                                                </connections>
                                             </textView>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -124,15 +127,15 @@
                                             <constraint firstAttribute="trailing" secondItem="YZQ-1l-fwU" secondAttribute="trailing" constant="20" id="0PP-kq-Xl1"/>
                                             <constraint firstItem="yPG-9d-Mhx" firstAttribute="top" secondItem="vYL-ND-fNl" secondAttribute="bottom" constant="55" id="15D-hP-0C7"/>
                                             <constraint firstAttribute="trailing" secondItem="iCK-fB-Wsk" secondAttribute="trailing" id="44S-9o-Xdy"/>
-                                            <constraint firstItem="neX-Gp-K1C" firstAttribute="leading" secondItem="UZB-fp-9Ih" secondAttribute="leading" constant="15" id="82X-FU-xK9"/>
+                                            <constraint firstItem="neX-Gp-K1C" firstAttribute="leading" secondItem="UZB-fp-9Ih" secondAttribute="leading" constant="20" id="82X-FU-xK9"/>
                                             <constraint firstItem="iCK-fB-Wsk" firstAttribute="top" secondItem="UZB-fp-9Ih" secondAttribute="top" id="DdX-hh-N4x"/>
                                             <constraint firstAttribute="trailing" secondItem="xdZ-dO-ONU" secondAttribute="trailing" id="Heq-qz-WNN"/>
                                             <constraint firstItem="uSx-Eg-IkJ" firstAttribute="top" secondItem="yPG-9d-Mhx" secondAttribute="bottom" constant="11" id="Hrb-cz-4SG"/>
                                             <constraint firstItem="01a-vZ-3LV" firstAttribute="trailing" secondItem="YZQ-1l-fwU" secondAttribute="trailing" id="IAA-v9-Egn"/>
                                             <constraint firstItem="C0D-Wa-EdR" firstAttribute="centerX" secondItem="iCK-fB-Wsk" secondAttribute="centerX" id="Nci-lu-pYj"/>
-                                            <constraint firstAttribute="bottom" secondItem="neX-Gp-K1C" secondAttribute="bottom" constant="15" id="QJo-Km-dyA"/>
+                                            <constraint firstAttribute="bottom" secondItem="neX-Gp-K1C" secondAttribute="bottom" constant="20" id="QJo-Km-dyA"/>
                                             <constraint firstItem="uSx-Eg-IkJ" firstAttribute="trailing" secondItem="yPG-9d-Mhx" secondAttribute="trailing" id="REZ-NL-kmZ"/>
-                                            <constraint firstAttribute="trailing" secondItem="neX-Gp-K1C" secondAttribute="trailing" constant="15" id="W5E-Dp-ab4"/>
+                                            <constraint firstAttribute="trailing" secondItem="neX-Gp-K1C" secondAttribute="trailing" constant="20" id="W5E-Dp-ab4"/>
                                             <constraint firstItem="uSx-Eg-IkJ" firstAttribute="centerX" secondItem="yPG-9d-Mhx" secondAttribute="centerX" id="YUo-bc-sNk"/>
                                             <constraint firstItem="YZQ-1l-fwU" firstAttribute="top" secondItem="uSx-Eg-IkJ" secondAttribute="bottom" constant="35" id="agp-R6-DrF"/>
                                             <constraint firstItem="arU-2I-xcn" firstAttribute="leading" secondItem="UZB-fp-9Ih" secondAttribute="leading" constant="20" id="anv-Eh-IdE"/>
@@ -143,7 +146,7 @@
                                             <constraint firstItem="zkW-EE-aUG" firstAttribute="leading" secondItem="vN6-3z-A7A" secondAttribute="leading" id="eGY-xi-jhW"/>
                                             <constraint firstItem="vYL-ND-fNl" firstAttribute="leading" secondItem="knW-F5-Goe" secondAttribute="leading" id="fuh-z2-50x"/>
                                             <constraint firstItem="vN6-3z-A7A" firstAttribute="top" secondItem="arU-2I-xcn" secondAttribute="bottom" constant="12" id="gNz-vR-Rc9"/>
-                                            <constraint firstItem="neX-Gp-K1C" firstAttribute="top" secondItem="Ha5-eq-mJ9" secondAttribute="bottom" constant="4" id="i1k-0N-1nu"/>
+                                            <constraint firstItem="neX-Gp-K1C" firstAttribute="top" secondItem="Ha5-eq-mJ9" secondAttribute="bottom" constant="11" id="i1k-0N-1nu"/>
                                             <constraint firstAttribute="trailing" secondItem="yPG-9d-Mhx" secondAttribute="trailing" constant="20" id="iv4-CC-0O6"/>
                                             <constraint firstItem="zkW-EE-aUG" firstAttribute="trailing" secondItem="vN6-3z-A7A" secondAttribute="trailing" id="j7h-fq-44c"/>
                                             <constraint firstItem="vN6-3z-A7A" firstAttribute="leading" secondItem="UZB-fp-9Ih" secondAttribute="leading" constant="20" id="kaq-Ix-KRA"/>
@@ -208,7 +211,9 @@
                         <outlet property="priceLabel" destination="knW-F5-Goe" id="mqz-fx-xnT"/>
                         <outlet property="ratingView" destination="arU-2I-xcn" id="PGT-pw-vgK"/>
                         <outlet property="scrollView" destination="9Bk-Qh-s3N" id="emf-Us-mCQ"/>
+                        <outlet property="scrollViewBottomConstraint" destination="IYD-wA-Aaa" id="uLa-mS-PBo"/>
                         <outlet property="subtitleLabel" destination="zkW-EE-aUG" id="ihV-eD-RUH"/>
+                        <outlet property="textView" destination="neX-Gp-K1C" id="Pno-FV-f9l"/>
                         <outlet property="titleLabel" destination="vN6-3z-A7A" id="W6A-38-NI0"/>
                     </connections>
                 </viewController>

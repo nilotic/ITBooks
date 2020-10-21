@@ -19,8 +19,11 @@ final class DetailViewController: UIViewController {
     @IBOutlet private var isbnLabel: UILabel!
     @IBOutlet private var infoLabel: UILabel!
     @IBOutlet private var descriptionLabel: UILabel!
+    @IBOutlet private var textView: UITextView!
     @IBOutlet private var imageActivityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
+    
+    @IBOutlet private var scrollViewBottomConstraint: NSLayoutConstraint!
     
     
     
@@ -34,7 +37,11 @@ final class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveDetail(notification:)), name: DetailNotificationName.detail, object: nil)
+        setTextView()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveDetail(notification:)),           name: DetailNotificationName.detail,            object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveKeyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveKeyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         guard dataManager.requestDetail() == true else { return }
         activityIndicatorView.startAnimating()
@@ -48,6 +55,14 @@ final class DetailViewController: UIViewController {
     
     // MARK: - Function
     // MARK: Private
+    private func setTextView() {
+        textView.layer.cornerRadius = 4.0
+        textView.layer.borderWidth  = 1.0
+        textView.layer.borderColor  = #colorLiteral(red: 0.9215686275, green: 0.9215686275, blue: 0.9215686275, alpha: 1)
+        
+        textView.textContainerInset = UIEdgeInsets(top: 14.0, left: 9.0, bottom: 16.0, right: 9.0)
+    }
+    
     private func update() {
         guard let data = dataManager.detail else {
             Toast.show(message: NSLocalizedString("Please check your network connection or try again.", comment: ""))
@@ -84,7 +99,6 @@ final class DetailViewController: UIViewController {
         // Description
         descriptionLabel.text = data.description
     }
-    
     
     private func updateInformation() {
         var descriptionParagraphStyle: NSMutableParagraphStyle {
@@ -149,6 +163,15 @@ final class DetailViewController: UIViewController {
         DispatchQueue.main.async { self.update() }
     }
     
+    @objc private func didReceiveKeyboardWillShow(notification: Notification) {
+        scrollViewBottomConstraint.constant = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect ?? .zero).height
+        DispatchQueue.main.async { self.view.layoutIfNeeded() }
+    }
+    
+    @objc private func didReceiveKeyboardWillHide(notification: Notification) {
+        scrollViewBottomConstraint.constant = 0
+        DispatchQueue.main.async { self.view.layoutIfNeeded() }
+    }
     
     
     // MARK: - Event
@@ -165,5 +188,22 @@ final class DetailViewController: UIViewController {
     // MARK: Back
     @IBAction private func backBarButtonItemAction(_ sender: UIBarButtonItem) {
         DispatchQueue.main.async { self.navigationController?.popViewController(animated: true) }
+    }
+}
+
+
+
+// MARK: - UITextView Delegate
+extension DetailViewController: UITextViewDelegate {
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        DispatchQueue.main.async {
+            self.scrollView.setContentOffset(CGPoint(x: 0, y: self.scrollView.contentSize.height - textView.frame.height), animated: true)
+        }
+        return true
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        dataManager.note = textView.text
     }
 }

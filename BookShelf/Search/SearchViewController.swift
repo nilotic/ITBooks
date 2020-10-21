@@ -190,6 +190,7 @@ extension SearchViewController: UITableViewDataSourcePrefetching {
             
             switch dataManager.autocompletes[indexPath.row] {
             case let data as BookAutocomplete:  ImageDataManager.shared.download(url: ImageURL(url: data.imageURL, hash: hash))
+            case is LoadingAutocomplete:        dataManager.requestNextPage()
             default:                            continue
             }
         }
