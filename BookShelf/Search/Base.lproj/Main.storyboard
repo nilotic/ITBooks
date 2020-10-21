@@ -2,7 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Mpj-5z-Prl">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -17,27 +17,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5a3-qo-skP">
-                                <rect key="frame" x="0.0" y="56" width="414" height="1"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="ah2-qU-Jhb"/>
-                                </constraints>
-                            </view>
-                            <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Street, land-lot, or building name" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zbI-6Y-GDQ">
-                                <rect key="frame" x="8" y="0.0" width="398" height="56"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="56" id="Hb3-FP-p43"/>
-                                </constraints>
-                                <color key="tintColor" name="title"/>
-                                <color key="barTintColor" name="title"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="search" smartDashesType="no" smartInsertDeleteType="yes"/>
-                                <connections>
-                                    <outlet property="delegate" destination="acy-1i-UZi" id="g9Q-aq-JbN"/>
-                                </connections>
-                            </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="N7c-iA-ZP2">
-                                <rect key="frame" x="0.0" y="57" width="414" height="751"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                                 <color key="separatorColor" name="separator"/>
                                 <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                 <prototypes>
@@ -185,33 +166,26 @@
                                 </connections>
                             </tableView>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="Ci4-Em-XFc">
-                                <rect key="frame" x="197" y="400.5" width="20" height="20"/>
+                                <rect key="frame" x="197" y="372" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="At4-wq-o1M"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="N7c-iA-ZP2" firstAttribute="centerX" secondItem="At4-wq-o1M" secondAttribute="centerX" id="3jX-oB-oL6"/>
-                            <constraint firstAttribute="trailing" secondItem="5a3-qo-skP" secondAttribute="trailing" id="5AA-V4-3uC"/>
                             <constraint firstItem="N7c-iA-ZP2" firstAttribute="trailing" secondItem="At4-wq-o1M" secondAttribute="trailing" id="6HS-Sz-Rad"/>
-                            <constraint firstItem="5a3-qo-skP" firstAttribute="top" secondItem="zbI-6Y-GDQ" secondAttribute="bottom" id="6rL-j5-cd3"/>
-                            <constraint firstItem="N7c-iA-ZP2" firstAttribute="top" secondItem="5a3-qo-skP" secondAttribute="bottom" id="9lR-gk-srK"/>
-                            <constraint firstItem="zbI-6Y-GDQ" firstAttribute="top" secondItem="At4-wq-o1M" secondAttribute="top" id="Bgk-Tc-iyB"/>
                             <constraint firstAttribute="bottom" secondItem="N7c-iA-ZP2" secondAttribute="bottom" id="aD0-YM-oWd"/>
                             <constraint firstItem="Ci4-Em-XFc" firstAttribute="centerY" secondItem="N7c-iA-ZP2" secondAttribute="centerY" constant="-22" id="eYL-mV-3tC"/>
-                            <constraint firstItem="5a3-qo-skP" firstAttribute="leading" secondItem="jZw-Ox-97z" secondAttribute="leading" id="l1U-WS-8lf"/>
-                            <constraint firstItem="At4-wq-o1M" firstAttribute="trailing" secondItem="zbI-6Y-GDQ" secondAttribute="trailing" constant="8" id="ptL-Jo-dGf"/>
+                            <constraint firstItem="N7c-iA-ZP2" firstAttribute="top" secondItem="At4-wq-o1M" secondAttribute="top" id="nzr-jg-kRj"/>
                             <constraint firstItem="Ci4-Em-XFc" firstAttribute="centerX" secondItem="jZw-Ox-97z" secondAttribute="centerX" id="rOc-jN-rNp"/>
                             <constraint firstItem="N7c-iA-ZP2" firstAttribute="leading" secondItem="At4-wq-o1M" secondAttribute="leading" id="x93-IU-pVH"/>
-                            <constraint firstItem="zbI-6Y-GDQ" firstAttribute="leading" secondItem="jZw-Ox-97z" secondAttribute="leading" constant="8" id="zXQ-aS-kiG"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Search" largeTitleDisplayMode="never" id="pe8-CM-4Oi"/>
+                    <navigationItem key="navigationItem" title="Search" largeTitleDisplayMode="always" id="pe8-CM-4Oi"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="activityIndicatorView" destination="Ci4-Em-XFc" id="XjK-Yf-Tg6"/>
-                        <outlet property="searchBar" destination="zbI-6Y-GDQ" id="opg-tV-L9U"/>
                         <outlet property="tableView" destination="N7c-iA-ZP2" id="Hsm-bB-s7E"/>
                         <outlet property="tableViewBottomConstraint" destination="aD0-YM-oWd" id="gDH-TP-03r"/>
                         <segue destination="xqw-tH-JrN" kind="show" identifier="DetailSegue" id="Bot-PV-Mhe"/>
@@ -237,8 +211,8 @@
                 <navigationController storyboardIdentifier="SearchNavigationController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Mpj-5z-Prl" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="UL3-oB-8AX">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" largeTitles="YES" id="UL3-oB-8AX">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

@@ -10,7 +10,6 @@ import UIKit
 final class SearchViewController: UIViewController {
 
     // MARK: - IBOutlet
-    @IBOutlet private var searchBar: UISearchBar!
     @IBOutlet private var tableView: UITableView!
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var tableViewBottomConstraint: NSLayoutConstraint!
@@ -21,23 +20,29 @@ final class SearchViewController: UIViewController {
     // MARK: Private
     private let dataManager = SearchDataManager()
     
+    private lazy var searchController: UISearchController = {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater  = self
+        searchController.delegate              = self
+        searchController.searchBar.delegate    = self
+        searchController.searchBar.placeholder = NSLocalizedString("Enter book name", comment: "")
+        
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.sizeToFit()
+        return searchController
+    }()
     
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setSearchBar()
+        setSearchView()
         
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveAutocompletes(notification:)),    name: SearchNotificationName.autocompletes,     object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveUpdate(notification:)),           name: SearchNotificationName.update,            object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveKeyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveKeyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-        DispatchQueue.main.async {
-            self.searchBar.becomeFirstResponder()
-            self.dataManager.keyword = nil
-        }
     }
     
     deinit {
@@ -45,18 +50,19 @@ final class SearchViewController: UIViewController {
     }
     
     
-
     // MARK: - Function
     // MARK: Private
-    private func setSearchBar() {
-        searchBar.placeholder  = NSLocalizedString("Enter book name", comment: "")
-        searchBar.alpha = 0
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            UIView.animate(withDuration: 0.38) { self.searchBar.alpha = 1.0 }
+    private func setSearchView() {
+        definesPresentationContext       = true
+        extendedLayoutIncludesOpaqueBars = true
+
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        
+        DispatchQueue.main.async {
+            self.searchController.searchBar.becomeFirstResponder()
         }
     }
-    
-    
     
     // MARK: - Notification
     @objc private func didReceiveAutocompletes(notification: Notification) {
@@ -169,6 +175,11 @@ extension SearchViewController: UITableViewDelegate {
         label.text      = dataManager.autocompletes.first is KeywordAutocomplete ? NSLocalizedString("Searched keywords", comment: "") : String(format: NSLocalizedString("Total %d results", comment: ""), dataManager.totalCount)
         
         view.addSubview(label)
+        
+        let separatorView = UIView(frame: CGRect(x: 0, y: view.frame.height - 1.0, width: tableView.frame.width, height: 1.0))
+        separatorView.backgroundColor = UIColor(named: "separator")
+        view.addSubview(separatorView)
+        
         return view
     }
     
@@ -182,8 +193,8 @@ extension SearchViewController: UITableViewDelegate {
         
         switch dataManager.autocompletes[indexPath.row] {
         case let data as KeywordAutocomplete:
-            searchBar.text = data.keyword
-            searchBar.endEditing(true)
+            searchController.searchBar.text = data.keyword
+            searchController.searchBar.endEditing(true)
             
             dataManager.keyword = data.keyword
             activityIndicatorView.startAnimating()
@@ -266,6 +277,24 @@ extension SearchViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.endEditing(true)
+    }
+}
+
+
+// MARK: - UISearchResultsUpdating
+extension SearchViewController: UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        dataManager.keyword = searchController.searchBar.text
+    }
+}
+
+
+// MARK: - UISearchControllerDelegate
+extension SearchViewController: UISearchControllerDelegate {
+    
+    func willDismissSearchController(_ searchController: UISearchController) {
+        searchController.searchBar.text = nil
     }
 }
 
