@@ -209,6 +209,9 @@
                             <constraint firstItem="9Bk-Qh-s3N" firstAttribute="top" secondItem="xyq-48-sk8" secondAttribute="top" id="lM6-cM-ax0"/>
                             <constraint firstItem="UZB-fp-9Ih" firstAttribute="height" secondItem="xyq-48-sk8" secondAttribute="height" priority="250" id="mmr-TK-YaE"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="6Xi-Wi-ptJ" appends="YES" id="xo1-jn-TUJ"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Detail" id="9h4-AK-1rD">
                         <barButtonItem key="leftBarButtonItem" image="chevron.backward" catalog="system" style="done" id="EX4-RL-08p">
@@ -237,6 +240,12 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="l9g-ec-DtY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="6Xi-Wi-ptJ">
+                    <connections>
+                        <action selector="tapGestureRecognizerAction:" destination="4Rb-dd-cXx" id="ayV-Vv-SMZ"/>
+                        <outlet property="delegate" destination="4Rb-dd-cXx" id="tka-SI-cj4"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="387" y="171"/>
         </scene>

@@ -209,6 +209,11 @@ final class DetailViewController: UIViewController {
     @IBAction private func backBarButtonItemAction(_ sender: UIBarButtonItem) {
         DispatchQueue.main.async { self.navigationController?.popViewController(animated: true) }
     }
+    
+    // MARK: Tap Gesture Recognizer
+    @IBAction private func tapGestureRecognizerAction(_ sender: UITapGestureRecognizer) {
+        view.endEditing(true)
+    }
 }
 
 
@@ -217,13 +222,24 @@ final class DetailViewController: UIViewController {
 extension DetailViewController: UITextViewDelegate {
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        DispatchQueue.main.async {
-            self.scrollView.setContentOffset(CGPoint(x: 0, y: self.scrollView.contentSize.height - textView.frame.height), animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.scrollView.setContentOffset(CGPoint(x: 0, y: self.scrollView.contentSize.height - self.scrollView.frame.height), animated: true)
         }
+        
         return true
     }
     
     func textViewDidChange(_ textView: UITextView) {
         dataManager.note = textView.text
+    }
+}
+
+
+
+// MARK: - UIGestureRecognizer Delegate
+extension DetailViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return textView.frame.contains(touch.location(in: view)) == false
     }
 }
