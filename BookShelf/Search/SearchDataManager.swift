@@ -270,6 +270,13 @@ final class SearchDataManager: NSObject {
     }
     
     private func loadResult() -> Bool {
+        #if UNITTEST
+        return true
+        
+        #elseif UITEST
+        return true
+        
+        #else
         guard let keyword = keyword?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed), keyword != "", let searchedKeyword = searchedKeywords.first(where: { $0.keyword == keyword }) else { return false }
         
         let request: NSFetchRequest<BookEntity> = BookEntity.fetchRequest()
@@ -301,6 +308,8 @@ final class SearchDataManager: NSObject {
             log(.error, error.localizedDescription)
             return false
         }
+        #endif
+       
     }
     
     private func updateKeywords(keyword: String, currentPage: UInt, count: UInt, totalCount: UInt) {
@@ -314,6 +323,9 @@ final class SearchDataManager: NSObject {
     }
     
     private func cache() {
+        #if UNITTEST
+        #elseif UITEST
+        #else
         guard let keyword = keyword else {
             log(.error, "Failed to cache the result.")
             return
@@ -346,5 +358,6 @@ final class SearchDataManager: NSObject {
         }
         
         coreDataStack.saveContext()
+        #endif
     }
 }

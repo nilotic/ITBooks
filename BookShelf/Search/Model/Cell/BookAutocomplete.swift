@@ -27,6 +27,9 @@ extension BookAutocomplete {
         url      = data.url
     }
     
+    #if UNITTEST
+    #elseif UITEST
+    #else
     init(data: BookEntity) {
         title    = data.title ?? ""
         subtitle = data.subtitle
@@ -35,4 +38,5 @@ extension BookAutocomplete {
         imageURL = data.imageURL
         url      = data.url
     }
+    #endif
 }

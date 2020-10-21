@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B75BAD04254029F8009293D7 /* BookCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E57586253FFE2B0011A150 /* BookCoreDataStack.swift */; };
+		B75BAD0825402B70009293D7 /* Books.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B7E5758D253FFEB20011A150 /* Books.xcdatamodeld */; };
+		B75BAD0C25402B8B009293D7 /* SearchDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA51253EBAED0019281D /* SearchDataManager.swift */; };
+		B75BAD1025402B8F009293D7 /* SearchDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA51253EBAED0019281D /* SearchDataManager.swift */; };
+		B75BAD1425402BB9009293D7 /* BookCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E57586253FFE2B0011A150 /* BookCoreDataStack.swift */; };
+		B75BAD2225402C62009293D7 /* SegueHandlerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFB09253EC1710019281D /* SegueHandlerType.swift */; };
+		B75BAD2C25402CB3009293D7 /* Autocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAAE253EBC090019281D /* Autocomplete.swift */; };
+		B75BAD2D25402CB3009293D7 /* BookAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAB8253EBC220019281D /* BookAutocomplete.swift */; };
+		B75BAD2E25402CB3009293D7 /* LoadingAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAFC253EBFEC0019281D /* LoadingAutocomplete.swift */; };
+		B75BAD2F25402CB3009293D7 /* KeywordAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575DA254012DC0011A150 /* KeywordAutocomplete.swift */; };
 		B7ABFA12253EB9FB0019281D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA11253EB9FB0019281D /* AppDelegate.swift */; };
 		B7ABFA14253EB9FB0019281D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA13253EB9FB0019281D /* SceneDelegate.swift */; };
 		B7ABFA19253EB9FB0019281D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B7ABFA17253EB9FB0019281D /* Main.storyboard */; };
@@ -65,10 +75,8 @@
 		B7ABFAA5253EBB500019281D /* BookAutocompleteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAA4253EBB500019281D /* BookAutocompleteCell.swift */; };
 		B7ABFAA6253EBB500019281D /* BookAutocompleteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAA4253EBB500019281D /* BookAutocompleteCell.swift */; };
 		B7ABFAAF253EBC090019281D /* Autocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAAE253EBC090019281D /* Autocomplete.swift */; };
-		B7ABFAB0253EBC090019281D /* Autocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAAE253EBC090019281D /* Autocomplete.swift */; };
 		B7ABFAB1253EBC090019281D /* Autocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAAE253EBC090019281D /* Autocomplete.swift */; };
 		B7ABFAB9253EBC220019281D /* BookAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAB8253EBC220019281D /* BookAutocomplete.swift */; };
-		B7ABFABA253EBC220019281D /* BookAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAB8253EBC220019281D /* BookAutocomplete.swift */; };
 		B7ABFABB253EBC220019281D /* BookAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAB8253EBC220019281D /* BookAutocomplete.swift */; };
 		B7ABFAC1253EBC610019281D /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFABF253EBC610019281D /* Book.swift */; };
 		B7ABFAC2253EBC610019281D /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFABF253EBC610019281D /* Book.swift */; };
@@ -87,7 +95,6 @@
 		B7ABFAF4253EBE100019281D /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAF3253EBE100019281D /* RatingView.swift */; };
 		B7ABFAF5253EBE100019281D /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAF3253EBE100019281D /* RatingView.swift */; };
 		B7ABFAFD253EBFEC0019281D /* LoadingAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAFC253EBFEC0019281D /* LoadingAutocomplete.swift */; };
-		B7ABFAFE253EBFEC0019281D /* LoadingAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAFC253EBFEC0019281D /* LoadingAutocomplete.swift */; };
 		B7ABFAFF253EBFEC0019281D /* LoadingAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFAFC253EBFEC0019281D /* LoadingAutocomplete.swift */; };
 		B7ABFB04253EC01F0019281D /* LoadingAutocompleteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFB03253EC01F0019281D /* LoadingAutocompleteCell.swift */; };
 		B7ABFB05253EC01F0019281D /* LoadingAutocompleteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFB03253EC01F0019281D /* LoadingAutocompleteCell.swift */; };
@@ -111,7 +118,6 @@
 		B7E575C825400D210011A150 /* UserDefaultsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575C625400D210011A150 /* UserDefaultsKey.swift */; };
 		B7E575C925400D210011A150 /* UserDefaultsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575C625400D210011A150 /* UserDefaultsKey.swift */; };
 		B7E575DB254012DC0011A150 /* KeywordAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575DA254012DC0011A150 /* KeywordAutocomplete.swift */; };
-		B7E575DC254012DC0011A150 /* KeywordAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575DA254012DC0011A150 /* KeywordAutocomplete.swift */; };
 		B7E575DD254012DC0011A150 /* KeywordAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575DA254012DC0011A150 /* KeywordAutocomplete.swift */; };
 		B7E575E2254013160011A150 /* KeywordAutocompleteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575E1254013160011A150 /* KeywordAutocompleteCell.swift */; };
 		B7E575E3254013160011A150 /* KeywordAutocompleteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575E1254013160011A150 /* KeywordAutocompleteCell.swift */; };
@@ -660,30 +666,34 @@
 				B7ABFA9B253EBAFB0019281D /* GIFConverter.swift in Sources */,
 				B7ABFA74253EBAFB0019281D /* ToastView.swift in Sources */,
 				B7E575EC254021100011A150 /* SearchedKeyword.swift in Sources */,
-				B7ABFAFE253EBFEC0019281D /* LoadingAutocomplete.swift in Sources */,
 				B7ABFA86253EBAFB0019281D /* URLRequestExtension.swift in Sources */,
 				B7ABFA7A253EBAFB0019281D /* HTTPHeaderField.swift in Sources */,
 				B7ABFB1D253EC2590019281D /* ImageURL.swift in Sources */,
 				B7ABFA8F253EBAFB0019281D /* NetworkManager.swift in Sources */,
-				B7E575DC254012DC0011A150 /* KeywordAutocomplete.swift in Sources */,
 				B7ABFA8C253EBAFB0019281D /* Host.swift in Sources */,
+				B75BAD04254029F8009293D7 /* BookCoreDataStack.swift in Sources */,
+				B75BAD2F25402CB3009293D7 /* KeywordAutocomplete.swift in Sources */,
 				B7ABFA7D253EBAFB0019281D /* HTTPMethod.swift in Sources */,
 				B7E575C825400D210011A150 /* UserDefaultsKey.swift in Sources */,
 				B7ABFA92253EBAFB0019281D /* Response.swift in Sources */,
+				B75BAD2D25402CB3009293D7 /* BookAutocomplete.swift in Sources */,
 				B7ABFAC2253EBC610019281D /* Book.swift in Sources */,
+				B75BAD2225402C62009293D7 /* SegueHandlerType.swift in Sources */,
+				B75BAD2C25402CB3009293D7 /* Autocomplete.swift in Sources */,
 				B7ABFB2F253ECA5F0019281D /* UICollectionViewAnimation.swift in Sources */,
 				B7ABFA29253EB9FC0019281D /* BookShelfTests.swift in Sources */,
 				B7ABFAEA253EBDA20019281D /* DetailDataManager.swift in Sources */,
 				B7ABFA77253EBAFB0019281D /* Toast.swift in Sources */,
 				B7ABFA98253EBAFB0019281D /* ImageDataManager.swift in Sources */,
+				B75BAD0825402B70009293D7 /* Books.xcdatamodeld in Sources */,
 				B7ABFA83253EBAFB0019281D /* HTTPHeaderValue.swift in Sources */,
 				B7ABFB32253ECA5F0019281D /* UITableViewAnimation.swift in Sources */,
-				B7ABFABA253EBC220019281D /* BookAutocomplete.swift in Sources */,
 				B7ABFA71253EBAFA0019281D /* Logger.swift in Sources */,
 				B7ABFB15253EC1D00019281D /* DetailResponse.swift in Sources */,
 				B7ABFAC5253EBC610019281D /* BooksResponse.swift in Sources */,
-				B7ABFAB0253EBC090019281D /* Autocomplete.swift in Sources */,
+				B75BAD2E25402CB3009293D7 /* LoadingAutocomplete.swift in Sources */,
 				B7ABFA95253EBAFB0019281D /* ResponseDetail.swift in Sources */,
+				B75BAD1025402B8F009293D7 /* SearchDataManager.swift in Sources */,
 				B7ABFA89253EBAFB0019281D /* HTTPStatusCode.swift in Sources */,
 				B7ABFA80253EBAFB0019281D /* API.swift in Sources */,
 			);
@@ -697,6 +707,7 @@
 				B7ABFA96253EBAFB0019281D /* ResponseDetail.swift in Sources */,
 				B7ABFA7B253EBAFB0019281D /* HTTPHeaderField.swift in Sources */,
 				B7ABFA4D253EBA430019281D /* SearchViewController.swift in Sources */,
+				B75BAD1425402BB9009293D7 /* BookCoreDataStack.swift in Sources */,
 				B7ABFA78253EBAFB0019281D /* Toast.swift in Sources */,
 				B7E575DD254012DC0011A150 /* KeywordAutocomplete.swift in Sources */,
 				B7ABFB0B253EC1710019281D /* SegueHandlerType.swift in Sources */,
@@ -714,6 +725,7 @@
 				B7ABFAC6253EBC610019281D /* BooksResponse.swift in Sources */,
 				B7ABFB16253EC1D00019281D /* DetailResponse.swift in Sources */,
 				B7ABFA72253EBAFA0019281D /* Logger.swift in Sources */,
+				B75BAD0C25402B8B009293D7 /* SearchDataManager.swift in Sources */,
 				B7ABFAFF253EBFEC0019281D /* LoadingAutocomplete.swift in Sources */,
 				B7ABFAE4253EBD760019281D /* DetailViewController.swift in Sources */,
 				B7E575C925400D210011A150 /* UserDefaultsKey.swift in Sources */,
@@ -984,6 +996,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sendbird.BookShelfUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG UITEST";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = BookShelf;
