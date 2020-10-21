@@ -12,6 +12,7 @@ final class DetailViewController: UIViewController {
     // MARK: - IBOutlet
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var imageView: UIImageView!
+    @IBOutlet private var ratingLabel: UILabel!
     @IBOutlet private var ratingView: RatingView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var subtitleLabel: UILabel!
@@ -22,6 +23,7 @@ final class DetailViewController: UIViewController {
     @IBOutlet private var textView: UITextView!
     @IBOutlet private var imageActivityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet private var textViewToolbar: UIToolbar!
     
     @IBOutlet private var scrollViewBottomConstraint: NSLayoutConstraint!
     
@@ -58,9 +60,10 @@ final class DetailViewController: UIViewController {
     private func setTextView() {
         textView.layer.cornerRadius = 4.0
         textView.layer.borderWidth  = 1.0
-        textView.layer.borderColor  = #colorLiteral(red: 0.9215686275, green: 0.9215686275, blue: 0.9215686275, alpha: 1)
+        textView.layer.borderColor  = UIColor(named: "subtitle")?.cgColor
         
         textView.textContainerInset = UIEdgeInsets(top: 14.0, left: 9.0, bottom: 16.0, right: 9.0)
+        textView.inputAccessoryView = textViewToolbar
     }
     
     private func update() {
@@ -82,6 +85,12 @@ final class DetailViewController: UIViewController {
         
         
         // Rating
+        let formatter = NumberFormatter()
+        formatter.numberStyle           = .decimal
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 2
+        ratingLabel.text = formatter.string(for: data.rating)
+        
         ratingView.rating = data.rating
         
         
@@ -112,8 +121,14 @@ final class DetailViewController: UIViewController {
             return paragraphStyle
         }
         
+        var titileAttributes: [NSAttributedString.Key : Any] {
+            return [.font            : UIFont.systemFont(ofSize: 16.0, weight: .semibold),
+                    .foregroundColor : UIColor(named: "title") ?? #colorLiteral(red: 0.1254901961, green: 0.1411764706, blue: 0.1607843137, alpha: 1),
+                    .paragraphStyle  : descriptionParagraphStyle]
+        }
+        
         var descriptionAttributes: [NSAttributedString.Key : Any] {
-            return [.font            : UIFont.systemFont(ofSize: 16.0),
+            return [.font            : UIFont.systemFont(ofSize: 15.0),
                     .foregroundColor : UIColor(named: "title") ?? #colorLiteral(red: 0.1254901961, green: 0.1411764706, blue: 0.1607843137, alpha: 1),
                     .paragraphStyle  : descriptionParagraphStyle]
         }
@@ -125,23 +140,30 @@ final class DetailViewController: UIViewController {
                                                                         .baselineOffset  : 4.0,
                                                                         .paragraphStyle  : descriptionParagraphStyle])
         }
+        
+        
         guard let data = dataManager.detail else { return }
         let mutableAttributedString = NSMutableAttributedString()
         
         mutableAttributedString.append(dotString)
-        mutableAttributedString.append(NSAttributedString(string: "Authors: \(data.authors)\n", attributes: descriptionAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "Authors:  ", attributes: titileAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "\(data.authors)\n", attributes: descriptionAttributes))
         
         mutableAttributedString.append(dotString)
-        mutableAttributedString.append(NSAttributedString(string: "Publisher: \(data.publisher)\n", attributes: descriptionAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "Publisher: ", attributes: titileAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "\(data.publisher)\n", attributes: descriptionAttributes))
         
         mutableAttributedString.append(dotString)
-        mutableAttributedString.append(NSAttributedString(string: "Language: \(data.language)\n", attributes: descriptionAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "Language:  ", attributes: titileAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "\(data.language)\n", attributes: descriptionAttributes))
         
         mutableAttributedString.append(dotString)
-        mutableAttributedString.append(NSAttributedString(string: "Pages: \(data.pages)\n", attributes: descriptionAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "Pages:  ", attributes: titileAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "\(data.pages)\n", attributes: descriptionAttributes))
         
         mutableAttributedString.append(dotString)
-        mutableAttributedString.append(NSAttributedString(string: "Year: \(data.year)\n", attributes: descriptionAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "Year:  ", attributes: titileAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "\(data.year)\n", attributes: descriptionAttributes))
         
         infoLabel.attributedText = mutableAttributedString
     }
@@ -165,13 +187,18 @@ final class DetailViewController: UIViewController {
     
     @objc private func didReceiveKeyboardWillShow(notification: Notification) {
         scrollViewBottomConstraint.constant = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect ?? .zero).height
+        
         DispatchQueue.main.async { self.view.layoutIfNeeded() }
     }
     
     @objc private func didReceiveKeyboardWillHide(notification: Notification) {
         scrollViewBottomConstraint.constant = 0
-        DispatchQueue.main.async { self.view.layoutIfNeeded() }
+        
+        UIView.animate(withDuration: 0.38) {
+            self.view.layoutIfNeeded()
+        }
     }
+    
     
     
     // MARK: - Event
@@ -189,6 +216,16 @@ final class DetailViewController: UIViewController {
     @IBAction private func backBarButtonItemAction(_ sender: UIBarButtonItem) {
         DispatchQueue.main.async { self.navigationController?.popViewController(animated: true) }
     }
+    
+    // MARK: TextView Done
+    @IBAction private func doneBarButtonItemAction(_ sender: UIBarButtonItem) {
+        textView.endEditing(true)
+    }
+    
+    // MARK: Tap Gesture Recognizer
+    @IBAction private func tapGestureRecognizerAction(_ sender: UITapGestureRecognizer) {
+        textView.endEditing(true)
+    }
 }
 
 
@@ -197,13 +234,24 @@ final class DetailViewController: UIViewController {
 extension DetailViewController: UITextViewDelegate {
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        DispatchQueue.main.async {
-            self.scrollView.setContentOffset(CGPoint(x: 0, y: self.scrollView.contentSize.height - textView.frame.height), animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.scrollView.setContentOffset(CGPoint(x: 0, y: self.scrollView.contentSize.height - self.scrollView.frame.height), animated: true)
         }
+        
         return true
     }
     
     func textViewDidChange(_ textView: UITextView) {
         dataManager.note = textView.text
+    }
+}
+
+
+
+// MARK: - UIGestureRecognizer Delegate
+extension DetailViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return textView.frame.contains(touch.location(in: view)) == false
     }
 }

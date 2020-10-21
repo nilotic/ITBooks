@@ -17,12 +17,16 @@ final class Toast: NSObject {
     private override init() {   // This prevents others from using the default initializer for this calls
         super.init()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveKeyboardWillShow(notification:)),     name: UIResponder.keyboardWillShowNotification,                object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveKeyboardWillHide(notification:)),     name: UIResponder.keyboardWillHideNotification,                object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveKeyboardFrameChanged(notification:)), name: UIResponder.keyboardDidChangeFrameNotification,          object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveOrientationChanged(notification:)),   name: UIApplication.didChangeStatusBarOrientationNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveKeyboardWillShow(notification:)),     name: UIResponder.keyboardWillShowNotification,       object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveKeyboardWillHide(notification:)),     name: UIResponder.keyboardWillHideNotification,       object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveKeyboardFrameChanged(notification:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
+        
+        if #available(iOS 13, *) {
+        } else {
+            NotificationCenter.default.addObserver(self, selector: #selector(didReceiveOrientationChanged(notification:)), name: UIApplication.didChangeStatusBarOrientationNotification, object: nil)
+        }
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
