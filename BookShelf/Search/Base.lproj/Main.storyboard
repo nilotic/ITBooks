@@ -2,7 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Mpj-5z-Prl">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -152,6 +152,31 @@
                                             <outlet property="activityIndicatorView" destination="c1q-SQ-akH" id="Pyb-ql-IcI"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="KeywordAutocompleteCell" id="DKR-QZ-IUw" customClass="KeywordAutocompleteCell" customModule="BookShelf" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="178" width="414" height="36.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DKR-QZ-IUw" id="esf-CR-RaJ">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="36.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Keyword" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NtD-1k-LQd">
+                                                    <rect key="frame" x="20" y="10" width="374" height="16"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
+                                                    <color key="textColor" name="title"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="NtD-1k-LQd" firstAttribute="leading" secondItem="esf-CR-RaJ" secondAttribute="leading" constant="20" id="BgS-gA-d7z"/>
+                                                <constraint firstAttribute="bottom" secondItem="NtD-1k-LQd" secondAttribute="bottom" priority="999" constant="10" id="Bmn-xp-Xxa"/>
+                                                <constraint firstItem="NtD-1k-LQd" firstAttribute="top" secondItem="esf-CR-RaJ" secondAttribute="top" constant="10" id="J39-NN-QgV"/>
+                                                <constraint firstAttribute="trailing" secondItem="NtD-1k-LQd" secondAttribute="trailing" constant="20" id="yK2-39-Eqq"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="keywordLabel" destination="NtD-1k-LQd" id="Udh-uA-qUT"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="acy-1i-UZi" id="1hQ-O9-cRT"/>
@@ -181,7 +206,7 @@
                             <constraint firstItem="zbI-6Y-GDQ" firstAttribute="leading" secondItem="jZw-Ox-97z" secondAttribute="leading" constant="8" id="zXQ-aS-kiG"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Search" id="pe8-CM-4Oi"/>
+                    <navigationItem key="navigationItem" title="Search" largeTitleDisplayMode="never" id="pe8-CM-4Oi"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -234,10 +259,10 @@
             <color red="0.039000000804662704" green="0.85900002717971802" blue="0.72200000286102295" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="separator">
-            <color red="0.41176470588235292" green="0.42352941176470588" blue="0.44313725490196076" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.41200000047683716" green="0.42399999499320984" blue="0.44299998879432678" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="subtitle">
-            <color red="0.84700000286102295" green="0.84700000286102295" blue="0.84700000286102295" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.72941176470588232" green="0.72941176470588232" blue="0.72941176470588232" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.125" green="0.14100000262260437" blue="0.16099999845027924" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -119,7 +119,13 @@ extension SearchViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard indexPath.row < dataManager.autocompletes.count else { return UITableViewCell() }
+        
         switch dataManager.autocompletes[indexPath.row] {
+        case let data as KeywordAutocomplete:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: KeywordAutocompleteCell.identifier) as? KeywordAutocompleteCell else { return UITableViewCell() }
+            cell.update(data: data)
+            return cell
+            
         case let data as BookAutocomplete:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: BookAutocompleteCell.identifier) as? BookAutocompleteCell else { return UITableViewCell() }
             cell.update(data: data)
@@ -160,7 +166,8 @@ extension SearchViewController: UITableViewDelegate {
         let label = UILabel(frame: CGRect(x: 20, y: 6.0, width: view.frame.width, height: 20.0))
         label.textColor = UIColor(named: "subtitle")
         label.font      = .systemFont(ofSize: 14.0)
-        label.text = String(format: NSLocalizedString("Total %d results", comment: ""), dataManager.totalCount)
+        label.text      = dataManager.autocompletes.first is KeywordAutocomplete ? NSLocalizedString("Searched keywords", comment: "") : String(format: NSLocalizedString("Total %d results", comment: ""), dataManager.totalCount)
+        
         view.addSubview(label)
         return view
     }
@@ -174,8 +181,43 @@ extension SearchViewController: UITableViewDelegate {
         guard indexPath.row < dataManager.autocompletes.count else { return }
         
         switch dataManager.autocompletes[indexPath.row] {
-        case let data as BookAutocomplete:  DispatchQueue.main.async { self.performSegue(with: .detail, sender: data.isbn) }
-        default:                            return
+        case let data as KeywordAutocomplete:
+            searchBar.text = data.keyword
+            searchBar.endEditing(true)
+            
+            dataManager.keyword = data.keyword
+            activityIndicatorView.startAnimating()
+            
+            
+        case let data as BookAutocomplete:
+            DispatchQueue.main.async { self.performSegue(with: .detail, sender: data.isbn) }
+            
+        default:
+            return
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        guard indexPath.row < dataManager.autocompletes.count else { return false }
+        
+        switch dataManager.autocompletes[indexPath.row] {
+        case is KeywordAutocomplete:    return true
+        default:                        return false
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        switch editingStyle {
+        case .delete:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                guard self.dataManager.delete(indexPath: indexPath) == true else {
+                    Toast.show(message: NSLocalizedString("Sorry there has been a temporary error. Please refresh and try again.", comment: ""))
+                    return
+                }
+            }
+            
+        default:
+            break
         }
     }
 }
@@ -218,8 +260,12 @@ extension SearchViewController: UISearchBarDelegate {
         activityIndicatorView.startAnimating()
     }
     
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.endEditing(true)
+    }
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        view.endEditing(true)
+        searchBar.endEditing(true)
     }
 }
 

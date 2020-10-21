@@ -46,7 +46,6 @@ final class BookShelfUITests: XCTestCase {
         let searchfield = application.searchFields.firstMatch
         searchfield.typeText("Hosts")
         
-        sleep(3)
         self.application.tables.element(boundBy: 0).cells.element(boundBy: 0).tap()
     }
 }

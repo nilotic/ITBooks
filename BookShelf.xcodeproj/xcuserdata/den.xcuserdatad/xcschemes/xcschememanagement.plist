@@ -7,7 +7,25 @@
 		<key>BookShelf.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>B7ABFA0D253EB9FB0019281D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B7ABFA23253EB9FC0019281D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B7ABFA2E253EB9FC0019281D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
