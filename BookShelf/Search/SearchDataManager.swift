@@ -97,13 +97,14 @@ final class SearchDataManager: NSObject {
         
         let workItem = DispatchWorkItem {
             guard self.requesNextPage(keyword: keywordCache) == true else { return }
-            self.keywordCache = nil // Lock
+            self.keywordCache = nil // Lock before requesting the next page
         }
         
         self.paginationWorkItem = workItem
         DispatchQueue.main.async(execute: workItem)
     }
     
+    /// Delete a keyword
     func delete(indexPath: IndexPath) -> Bool {
         guard indexPath.row < autocompletes.count, let autocomplete = autocompletes[indexPath.row] as? KeywordAutocomplete else { return false }
         var keywords = searchedKeywords
@@ -269,6 +270,7 @@ final class SearchDataManager: NSObject {
         }
     }
     
+    /// Load the cache in CoreData
     private func loadResult() -> Bool {
         #if UNITTEST
         return true
@@ -312,6 +314,7 @@ final class SearchDataManager: NSObject {
        
     }
     
+    /// Save searched keywords
     private func updateKeywords(keyword: String, currentPage: UInt, count: UInt, totalCount: UInt) {
         var keywords = searchedKeywords
         if let index = keywords.firstIndex(where: { $0.keyword == keyword }) {
@@ -322,6 +325,7 @@ final class SearchDataManager: NSObject {
         searchedKeywords = keywords
     }
     
+    /// Save data in CoreData
     private func cache() {
         #if UNITTEST
         #elseif UITEST
