@@ -50,7 +50,7 @@ final class SearchDataManager: NSObject {
             return (try? JSONDecoder().decode([SearchedKeyword].self, from: data)) ?? []
         }
     }
-    
+    private let queue = DispatchQueue(label: "accessQueue")
     
     
     // MARK: - Initializer
@@ -134,7 +134,9 @@ final class SearchDataManager: NSObject {
         let request = URLRequest(httpMethod: .get, url: .autocomplete(keyword: keyword))
         
         return NetworkManager.shared.request(urlRequest: request) { response in
-            var autocompletes = [Autocomplete]()
+            var autocompletes      = [Autocomplete]()
+            var booksAutocompletes = [BookAutocomplete]()
+            
             var currentPage: UInt = 0
             var count: UInt       = 0
             var totalCount: UInt  = 0
@@ -152,7 +154,7 @@ final class SearchDataManager: NSObject {
                     
                     guard autocompletes.isEmpty == false else { return }
                     self.updateKeywords(keyword: keyword, currentPage: currentPage, count: count, totalCount: totalCount)
-                    self.cache()
+                    self.cache(autocompletes: booksAutocompletes, keyword: keyword)
                 }
             }
             
@@ -163,7 +165,9 @@ final class SearchDataManager: NSObject {
             
             do {
                 let data = try JSONDecoder().decode(BooksResponse.self, from: decodableData)
-                autocompletes = data.books.map { BookAutocomplete(data: $0) }
+                booksAutocompletes = data.books.map { BookAutocomplete(data: $0) }
+                
+                autocompletes = booksAutocompletes
                 currentPage   = data.page
                 totalCount    = data.total
                 count         = UInt(autocompletes.count)
@@ -186,7 +190,9 @@ final class SearchDataManager: NSObject {
         let request = URLRequest(httpMethod: .get, url: .autocomplete(keyword: keyword, page: currentPage + 1))
        
         return NetworkManager.shared.request(urlRequest: request) { response in
-            var animations = [UITableViewAnimationSet]()
+            var animations         = [UITableViewAnimationSet]()
+            var booksAutocompletes = [BookAutocomplete]()
+            
             var currentPage: UInt = 0
             var totalCount: UInt  = 0
             var count: UInt       = 0
@@ -204,7 +210,7 @@ final class SearchDataManager: NSObject {
                     
                     guard autocompletes.isEmpty == false else { return }
                     self.updateKeywords(keyword: keyword, currentPage: currentPage, count: count, totalCount: totalCount)
-                    self.cache()
+                    self.cache(autocompletes: booksAutocompletes, keyword: keyword)
                 }
             }
             
@@ -231,7 +237,9 @@ final class SearchDataManager: NSObject {
                 let lastItemCount = autocompletes.count
                 
                 for (i, book) in data.books.enumerated() {
-                    autocompletes.append(BookAutocomplete(data: book))
+                    let autocomplete = BookAutocomplete(data: book)
+                    booksAutocompletes.append(autocomplete)
+                    autocompletes.append(autocomplete)
                     
                     guard 0 < i else { continue }
                     rows.append(IndexPath(row: lastItemCount + i, section: 0))
@@ -326,42 +334,26 @@ final class SearchDataManager: NSObject {
     }
     
     /// Save data in CoreData
-    private func cache() {
+    private func cache(autocompletes: [BookAutocomplete], keyword: String) {
         #if UNITTEST
         #elseif UITEST
         #else
-        guard let keyword = keyword else {
-            log(.error, "Failed to cache the result.")
-            return
-        }
-        
-        // Remove the loading data
-        var autocompletes = self.autocompletes
         guard autocompletes.isEmpty == false else { return }
         
-        if autocompletes.last is LoadingAutocomplete {
-            autocompletes.removeLast()
+        queue.async {
+            for autocomplete in autocompletes {
+                let entity = BookEntity(context: self.coreDataStack.managedContext)
+                entity.keyword  = keyword
+                entity.title    = autocomplete.title
+                entity.subtitle = autocomplete.subtitle
+                entity.price    = autocomplete.price
+                entity.isbn     = autocomplete.isbn
+                entity.imageURL = autocomplete.imageURL
+                entity.url      = autocomplete.url
+            }
+            
+            self.coreDataStack.saveContext()
         }
-        
-        
-        // Save
-        guard let bookAutocompletes = autocompletes as? [BookAutocomplete] else {
-            log(.error, "Failed to cache the result. keyword: \(keyword)")
-            return
-        }
-        
-        for autocomplete in bookAutocompletes {
-            let entity = BookEntity(context: coreDataStack.managedContext)
-            entity.keyword  = keyword
-            entity.title    = autocomplete.title
-            entity.subtitle = autocomplete.subtitle
-            entity.price    = autocomplete.price
-            entity.isbn     = autocomplete.isbn
-            entity.imageURL = autocomplete.imageURL
-            entity.url      = autocomplete.url
-        }
-        
-        coreDataStack.saveContext()
         #endif
     }
 }
