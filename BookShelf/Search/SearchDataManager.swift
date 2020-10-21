@@ -21,7 +21,7 @@ final class SearchDataManager: NSObject {
     private(set) var totalCount: UInt = 0
     
     var keyword: String? = nil {
-        didSet { requestAutocompletes() }
+        didSet { request()  }
     }
     
     
@@ -48,7 +48,7 @@ final class SearchDataManager: NSObject {
         
         
         // Lazy request
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: workItem)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: workItem)
     }
     
     func requestNextPage() {
@@ -68,7 +68,7 @@ final class SearchDataManager: NSObject {
     @discardableResult
     private func requestAutocompletes() -> Bool {
         guard let keyword = keyword?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed), keyword != "" else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 self.autocompletes = []
                 NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: nil)
             }
@@ -130,7 +130,7 @@ final class SearchDataManager: NSObject {
             
             defer {
                 DispatchQueue.main.async {
-                    guard currentPage == self.currentPage + 1 else { return }
+                    guard currentPage == self.currentPage + 1, self.keyword == keyword else { return }
                     self.autocompletes = autocompletes
                     self.currentPage   = currentPage
                     self.keywordCache  = keyword
