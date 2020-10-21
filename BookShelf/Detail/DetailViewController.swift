@@ -12,6 +12,7 @@ final class DetailViewController: UIViewController {
     // MARK: - IBOutlet
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var imageView: UIImageView!
+    @IBOutlet private var ratingLabel: UILabel!
     @IBOutlet private var ratingView: RatingView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var subtitleLabel: UILabel!
@@ -82,6 +83,12 @@ final class DetailViewController: UIViewController {
         
         
         // Rating
+        let formatter = NumberFormatter()
+        formatter.numberStyle           = .decimal
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 2
+        ratingLabel.text = formatter.string(for: data.rating)
+        
         ratingView.rating = data.rating
         
         
@@ -112,8 +119,14 @@ final class DetailViewController: UIViewController {
             return paragraphStyle
         }
         
+        var titileAttributes: [NSAttributedString.Key : Any] {
+            return [.font            : UIFont.systemFont(ofSize: 16.0, weight: .semibold),
+                    .foregroundColor : UIColor(named: "title") ?? #colorLiteral(red: 0.1254901961, green: 0.1411764706, blue: 0.1607843137, alpha: 1),
+                    .paragraphStyle  : descriptionParagraphStyle]
+        }
+        
         var descriptionAttributes: [NSAttributedString.Key : Any] {
-            return [.font            : UIFont.systemFont(ofSize: 16.0),
+            return [.font            : UIFont.systemFont(ofSize: 15.0),
                     .foregroundColor : UIColor(named: "title") ?? #colorLiteral(red: 0.1254901961, green: 0.1411764706, blue: 0.1607843137, alpha: 1),
                     .paragraphStyle  : descriptionParagraphStyle]
         }
@@ -125,23 +138,30 @@ final class DetailViewController: UIViewController {
                                                                         .baselineOffset  : 4.0,
                                                                         .paragraphStyle  : descriptionParagraphStyle])
         }
+        
+        
         guard let data = dataManager.detail else { return }
         let mutableAttributedString = NSMutableAttributedString()
         
         mutableAttributedString.append(dotString)
-        mutableAttributedString.append(NSAttributedString(string: "Authors: \(data.authors)\n", attributes: descriptionAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "Authors:  ", attributes: titileAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "\(data.authors)\n", attributes: descriptionAttributes))
         
         mutableAttributedString.append(dotString)
-        mutableAttributedString.append(NSAttributedString(string: "Publisher: \(data.publisher)\n", attributes: descriptionAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "Publisher: ", attributes: titileAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "\(data.publisher)\n", attributes: descriptionAttributes))
         
         mutableAttributedString.append(dotString)
-        mutableAttributedString.append(NSAttributedString(string: "Language: \(data.language)\n", attributes: descriptionAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "Language:  ", attributes: titileAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "\(data.language)\n", attributes: descriptionAttributes))
         
         mutableAttributedString.append(dotString)
-        mutableAttributedString.append(NSAttributedString(string: "Pages: \(data.pages)\n", attributes: descriptionAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "Pages:  ", attributes: titileAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "\(data.pages)\n", attributes: descriptionAttributes))
         
         mutableAttributedString.append(dotString)
-        mutableAttributedString.append(NSAttributedString(string: "Year: \(data.year)\n", attributes: descriptionAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "Year:  ", attributes: titileAttributes))
+        mutableAttributedString.append(NSAttributedString(string: "\(data.year)\n", attributes: descriptionAttributes))
         
         infoLabel.attributedText = mutableAttributedString
     }
