@@ -13,7 +13,7 @@ final class BookCoreDataStack {
     // MARK: Public
     lazy var managedContext: NSManagedObjectContext = {
         let viewContext = storeContainer.viewContext
-        viewContext.mergePolicy = NSMergePolicyType.mergeByPropertyObjectTrumpMergePolicyType
+        viewContext.mergePolicy = NSMergePolicy(merge: .mergeByPropertyStoreTrumpMergePolicyType)
         return viewContext
     }()
     

@@ -12,13 +12,13 @@
         <!--Detail-->
         <scene sceneID="4Nv-Gt-o42">
             <objects>
-                <viewController storyboardIdentifier="DetailViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4Rb-dd-cXx" customClass="DetailViewController" customModule="BookShelf" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DetailViewController" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4Rb-dd-cXx" customClass="DetailViewController" customModule="BookShelf" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zAh-eG-U2m">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="950"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Bk-Qh-s3N">
-                                <rect key="frame" x="0.0" y="88" width="414" height="828"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="828"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UZB-fp-9Ih">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="833"/>
@@ -194,7 +194,7 @@
                                 <viewLayoutGuide key="frameLayoutGuide" id="CrB-YW-RpX"/>
                             </scrollView>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="owD-c6-nHr">
-                                <rect key="frame" x="197" y="465" width="20" height="20"/>
+                                <rect key="frame" x="197" y="421" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="xyq-48-sk8"/>
@@ -213,7 +213,7 @@
                             <outletCollection property="gestureRecognizers" destination="6Xi-Wi-ptJ" appends="YES" id="xo1-jn-TUJ"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Detail" id="9h4-AK-1rD">
+                    <navigationItem key="navigationItem" title="Detail" largeTitleDisplayMode="never" id="9h4-AK-1rD">
                         <barButtonItem key="leftBarButtonItem" image="chevron.backward" catalog="system" style="done" id="EX4-RL-08p">
                             <color key="tintColor" name="title"/>
                             <connections>
@@ -221,6 +221,8 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="414" height="950"/>
                     <connections>
                         <outlet property="activityIndicatorView" destination="owD-c6-nHr" id="CHQ-N1-zWL"/>
@@ -265,9 +267,11 @@
         <!--Navigation Controller-->
         <scene sceneID="5BL-is-g6I">
             <objects>
-                <navigationController storyboardIdentifier="DetailNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="paA-72-w5b" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="DetailNavigationController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="paA-72-w5b" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="p5g-yD-z2T">
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="p5g-yD-z2T">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

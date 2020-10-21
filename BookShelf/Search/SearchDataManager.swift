@@ -39,17 +39,13 @@ final class SearchDataManager: NSObject {
     private var keywordCache: String? = nil
     private var currentPage: UInt     = 0
     
-    private var searchedKeywords: Set<String> {
+    private var searchedKeywords: [String] {
         set {
             guard newValue.isEmpty == false else { return }
-            let array = newValue.map { $0 }
-            UserDefaults.standard.set(array, forKey: UserDefaultsKey.searchedKeywords)
+            UserDefaults.standard.set(newValue, forKey: UserDefaultsKey.searchedKeywords)
         }
         
-        get {
-            let array = UserDefaults.standard.array(forKey: UserDefaultsKey.searchedKeywords) as? [String] ?? []
-            return Set(array)
-        }
+        get { return UserDefaults.standard.array(forKey: UserDefaultsKey.searchedKeywords) as? [String] ?? [] }
     }
     
     
@@ -74,6 +70,12 @@ final class SearchDataManager: NSObject {
         paginationWorkItem?.cancel()
         keywordCache = nil
 
+        
+        guard let keyword = keyword, keyword != "" else {
+            requestSearchedKeywords()
+            return
+        }
+        
         // Set workItem
         let workItem = DispatchWorkItem {
             guard self.loadResult() == false else { return }
@@ -107,6 +109,8 @@ final class SearchDataManager: NSObject {
         
         // Remove the loading data
         var autocompletes = self.autocompletes
+        guard autocompletes.isEmpty == false else { return }
+        
         if autocompletes.last is LoadingAutocomplete {
             autocompletes.removeLast()
         }
@@ -130,12 +134,6 @@ final class SearchDataManager: NSObject {
         }
         
         coreDataStack.saveContext()
-        
-        
-        // Insert the keyword
-        var keywords = searchedKeywords
-        keywords.insert(keyword)
-        searchedKeywords = keywords
     }
     
     // MARK: Private
@@ -164,6 +162,8 @@ final class SearchDataManager: NSObject {
                     self.totalCount    = totalCount
                     self.keywordCache  = keyword
                     
+                    self.updateKeywords(keyword: keyword)
+                
                     NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: errorDetail)
                 }
             }
@@ -178,7 +178,6 @@ final class SearchDataManager: NSObject {
                 autocompletes = data.books.map { BookAutocomplete(data: $0) }
                 currentPage   = data.page
                 totalCount    = data.total
-                
                 
                 guard autocompletes.count < data.total else { return }
                 autocompletes.append(LoadingAutocomplete())
@@ -257,6 +256,22 @@ final class SearchDataManager: NSObject {
         }
     }
     
+    private func requestSearchedKeywords() {
+        guard (keyword == nil || keyword == "") else { return }
+        
+        let keywords = searchedKeywords
+        guard keywords.isEmpty == false else { return }
+        
+        DispatchQueue.global().async {
+            let autocompletes = keywords.map { KeywordAutocomplete(keyword: $0) }
+                
+            DispatchQueue.main.async {
+                self.autocompletes = autocompletes
+                NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: nil)
+            }
+        }
+    }
+    
     private func loadResult() -> Bool {
         guard let keyword = keyword?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed), keyword != "", searchedKeywords.contains(keyword) == true else { return false }
         
@@ -285,5 +300,16 @@ final class SearchDataManager: NSObject {
             log(.error, error.localizedDescription)
             return false
         }
+    }
+    
+    private func updateKeywords(keyword: String) {
+        var keywords = searchedKeywords
+        if let index = keywords.firstIndex(where: { $0 == keyword }) {
+            keywords.remove(at: index)
+        }
+            
+        keywords.insert(keyword, at: 0)
+        
+        searchedKeywords = keywords
     }
 }

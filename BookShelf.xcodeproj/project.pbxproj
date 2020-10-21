@@ -110,6 +110,11 @@
 		B7E575C725400D210011A150 /* UserDefaultsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575C625400D210011A150 /* UserDefaultsKey.swift */; };
 		B7E575C825400D210011A150 /* UserDefaultsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575C625400D210011A150 /* UserDefaultsKey.swift */; };
 		B7E575C925400D210011A150 /* UserDefaultsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575C625400D210011A150 /* UserDefaultsKey.swift */; };
+		B7E575DB254012DC0011A150 /* KeywordAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575DA254012DC0011A150 /* KeywordAutocomplete.swift */; };
+		B7E575DC254012DC0011A150 /* KeywordAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575DA254012DC0011A150 /* KeywordAutocomplete.swift */; };
+		B7E575DD254012DC0011A150 /* KeywordAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575DA254012DC0011A150 /* KeywordAutocomplete.swift */; };
+		B7E575E2254013160011A150 /* KeywordAutocompleteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575E1254013160011A150 /* KeywordAutocompleteCell.swift */; };
+		B7E575E3254013160011A150 /* KeywordAutocompleteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575E1254013160011A150 /* KeywordAutocompleteCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -188,6 +193,8 @@
 		B7E57586253FFE2B0011A150 /* BookCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookCoreDataStack.swift; sourceTree = "<group>"; };
 		B7E5758E253FFEB20011A150 /* BookAutocomplete.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BookAutocomplete.xcdatamodel; sourceTree = "<group>"; };
 		B7E575C625400D210011A150 /* UserDefaultsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKey.swift; sourceTree = "<group>"; };
+		B7E575DA254012DC0011A150 /* KeywordAutocomplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordAutocomplete.swift; sourceTree = "<group>"; };
+		B7E575E1254013160011A150 /* KeywordAutocompleteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordAutocompleteCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -352,6 +359,7 @@
 		B7ABFAA3253EBB200019281D /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				B7E575E1254013160011A150 /* KeywordAutocompleteCell.swift */,
 				B7ABFAA4253EBB500019281D /* BookAutocompleteCell.swift */,
 				B7ABFB03253EC01F0019281D /* LoadingAutocompleteCell.swift */,
 			);
@@ -372,6 +380,7 @@
 			isa = PBXGroup;
 			children = (
 				B7ABFAAE253EBC090019281D /* Autocomplete.swift */,
+				B7E575DA254012DC0011A150 /* KeywordAutocomplete.swift */,
 				B7ABFAB8253EBC220019281D /* BookAutocomplete.swift */,
 				B7ABFAFC253EBFEC0019281D /* LoadingAutocomplete.swift */,
 			);
@@ -613,6 +622,7 @@
 				B7ABFAB9253EBC220019281D /* BookAutocomplete.swift in Sources */,
 				B7ABFA9A253EBAFB0019281D /* GIFConverter.swift in Sources */,
 				B7ABFA88253EBAFB0019281D /* HTTPStatusCode.swift in Sources */,
+				B7E575DB254012DC0011A150 /* KeywordAutocomplete.swift in Sources */,
 				B7ABFA73253EBAFB0019281D /* ToastView.swift in Sources */,
 				B7ABFA91253EBAFB0019281D /* Response.swift in Sources */,
 				B7ABFA7C253EBAFB0019281D /* HTTPMethod.swift in Sources */,
@@ -626,6 +636,7 @@
 				B7E5758F253FFEB20011A150 /* Books.xcdatamodeld in Sources */,
 				B7ABFA8E253EBAFB0019281D /* NetworkManager.swift in Sources */,
 				B7ABFA14253EB9FB0019281D /* SceneDelegate.swift in Sources */,
+				B7E575E2254013160011A150 /* KeywordAutocompleteCell.swift in Sources */,
 				B7ABFAA5253EBB500019281D /* BookAutocompleteCell.swift in Sources */,
 				B7ABFB31253ECA5F0019281D /* UITableViewAnimation.swift in Sources */,
 				B7ABFB14253EC1D00019281D /* DetailResponse.swift in Sources */,
@@ -647,6 +658,7 @@
 				B7ABFA7A253EBAFB0019281D /* HTTPHeaderField.swift in Sources */,
 				B7ABFB1D253EC2590019281D /* ImageURL.swift in Sources */,
 				B7ABFA8F253EBAFB0019281D /* NetworkManager.swift in Sources */,
+				B7E575DC254012DC0011A150 /* KeywordAutocomplete.swift in Sources */,
 				B7ABFA8C253EBAFB0019281D /* Host.swift in Sources */,
 				B7ABFA7D253EBAFB0019281D /* HTTPMethod.swift in Sources */,
 				B7E575C825400D210011A150 /* UserDefaultsKey.swift in Sources */,
@@ -679,6 +691,7 @@
 				B7ABFA7B253EBAFB0019281D /* HTTPHeaderField.swift in Sources */,
 				B7ABFA4D253EBA430019281D /* SearchViewController.swift in Sources */,
 				B7ABFA78253EBAFB0019281D /* Toast.swift in Sources */,
+				B7E575DD254012DC0011A150 /* KeywordAutocomplete.swift in Sources */,
 				B7ABFB0B253EC1710019281D /* SegueHandlerType.swift in Sources */,
 				B7ABFA93253EBAFB0019281D /* Response.swift in Sources */,
 				B7ABFA8D253EBAFB0019281D /* Host.swift in Sources */,
@@ -707,6 +720,7 @@
 				B7ABFA75253EBAFB0019281D /* ToastView.swift in Sources */,
 				B7ABFAB1253EBC090019281D /* Autocomplete.swift in Sources */,
 				B7ABFB30253ECA5F0019281D /* UICollectionViewAnimation.swift in Sources */,
+				B7E575E3254013160011A150 /* KeywordAutocompleteCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
