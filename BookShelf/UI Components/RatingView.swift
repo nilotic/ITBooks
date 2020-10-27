@@ -21,8 +21,8 @@ final class RatingView: UIView {
     
     
     // MARK: Private
-    private var imageViews = [UIImageView]()
-    private let startSize  = CGSize(width: 12.0, height: 12.0)
+    private var containerView = UIView()
+    private let startSize     = CGSize(width: 12.0, height: 12.0)
     private let padding: CGFloat = 2.0
     
     
@@ -48,12 +48,25 @@ final class RatingView: UIView {
     // MARK: Private
     private func setView() {
         for i in 0..<5 {
-            let imageView = UIImageView(image: UIImage(systemName: "star.fill"))
-            imageView.frame = CGRect(origin: CGPoint(x: CGFloat(i) * (startSize.width + padding), y: 0), size: startSize)
-            imageView.tintColor = .systemYellow
+            let startImageView = UIImageView(image: UIImage(systemName: "star.fill"))
+            startImageView.frame     = CGRect(origin: CGPoint(x: CGFloat(i) * (startSize.width + padding), y: 0), size: startSize)
+            startImageView.tintColor = .systemYellow
             
-            imageViews.append(imageView)
-            addSubview(imageView)
+            let backgroundImageView = UIImageView(image: UIImage(systemName: "star.fill"))
+            backgroundImageView.frame     = startImageView.frame
+            backgroundImageView.tintColor = .systemGray
+            
+            containerView.addSubview(startImageView)
+            
+            addSubview(backgroundImageView)
+            addSubview(containerView)
+            
+            containerView.translatesAutoresizingMaskIntoConstraints = false
+            
+            containerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive   = true
+            containerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+            containerView.topAnchor.constraint(equalTo: topAnchor).isActive           = true
+            containerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive     = true
         }
         
         let ratingMask = CALayer()
@@ -69,10 +82,10 @@ final class RatingView: UIView {
         let rounded = CGFloat(round(max(0, min(5, rating)) * 10) / 10)
         
         let ratingMask = CALayer()
-        ratingMask.frame = CGRect(x: 0, y: 0, width: startSize.width * rounded + padding * (rounded - 1), height: frame.height)
+        ratingMask.frame = CGRect(x: 0, y: 0, width: startSize.width * rounded + padding * (rounded - 1), height: containerView.frame.height)
         ratingMask.backgroundColor = UIColor.green.cgColor
         
-        layer.mask = ratingMask
+        containerView.layer.mask = ratingMask
     }
 }
     

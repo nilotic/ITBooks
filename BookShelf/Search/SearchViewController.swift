@@ -33,6 +33,7 @@ final class SearchViewController: UIViewController {
     }()
     
     
+    
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +51,7 @@ final class SearchViewController: UIViewController {
     }
     
     
+    
     // MARK: - Function
     // MARK: Private
     private func setSearchView() {
@@ -63,6 +65,8 @@ final class SearchViewController: UIViewController {
             self.searchController.searchBar.becomeFirstResponder()
         }
     }
+    
+    
     
     // MARK: - Notification
     @objc private func didReceiveAutocompletes(notification: Notification) {
@@ -148,6 +152,7 @@ extension SearchViewController: UITableViewDataSource {
     }
 }
 
+
 // MARK: Delegate
 extension SearchViewController: UITableViewDelegate {
     
@@ -201,6 +206,7 @@ extension SearchViewController: UITableViewDelegate {
             
             
         case let data as BookAutocomplete:
+            searchController.searchBar.endEditing(true)
             DispatchQueue.main.async { self.performSegue(with: .detail, sender: data.isbn) }
             
         default:
@@ -258,6 +264,16 @@ extension SearchViewController: UITableViewDataSourcePrefetching {
             default:                            continue
             }
         }
+    }
+}
+
+
+
+// MARK: - UIScrollView Delegate
+extension SearchViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        searchController.searchBar.endEditing(true)
     }
 }
 
