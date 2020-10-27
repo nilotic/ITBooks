@@ -39,6 +39,7 @@ final class SearchViewController: UIViewController {
         super.viewDidLoad()
         
         setSearchView()
+        setTableView()
         
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveAutocompletes(notification:)),    name: SearchNotificationName.autocompletes,     object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveUpdate(notification:)),           name: SearchNotificationName.update,            object: nil)
@@ -66,6 +67,30 @@ final class SearchViewController: UIViewController {
         }
     }
     
+    private func setTableView() {
+        dataManager.dataSource = UITableViewDiffableDataSource<Int, HashableAutocomplete>(tableView: tableView) { (tableView, indexPath, itemIdentifier) -> UITableViewCell? in
+            switch self.dataManager.autocompletes2[indexPath.row].data {
+            case let data as KeywordAutocomplete:
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: KeywordAutocompleteCell.identifier) as? KeywordAutocompleteCell else { return UITableViewCell() }
+                cell.update(data: data)
+                return cell
+                
+            case let data as BookAutocomplete:
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: BookAutocompleteCell.identifier) as? BookAutocompleteCell else { return UITableViewCell() }
+                cell.update(data: data)
+                return cell
+                
+            case is LoadingAutocomplete:
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: LoadingAutocompleteCell.identifier) as? LoadingAutocompleteCell else { return UITableViewCell() }
+                cell.update()
+                return cell
+                
+            default:
+                return UITableViewCell()
+            }
+        }
+    }
+    
     
     
     // MARK: - Notification
@@ -77,7 +102,13 @@ final class SearchViewController: UIViewController {
             return
         }
         
-        DispatchQueue.main.async { self.tableView.reloadData() }
+        DispatchQueue.main.async {
+            var snapshot = NSDiffableDataSourceSnapshot<Int, HashableAutocomplete>()
+            snapshot.appendSections([0])
+            snapshot.appendItems(self.dataManager.autocompletes2)
+            
+            self.dataManager.dataSource?.apply(snapshot)
+        }
     }
     
     @objc private func didReceiveUpdate(notification: Notification) {

@@ -5,7 +5,7 @@
 //  Created by Den Jo on 2020/10/19.
 //
 
-import Foundation
+import UIKit
 import CoreData
 
 // MARK: - Define
@@ -18,7 +18,10 @@ final class SearchDataManager: NSObject {
     
     // MARK: - Value
     // MARK: Public
+    var dataSource: UITableViewDiffableDataSource<Int, HashableAutocomplete>? = nil
+    
     private(set) var autocompletes = [Autocomplete]()
+    private(set) var autocompletes2 = [HashableAutocomplete]()
     private(set) var totalCount: UInt = 0
     
     var keyword: String? = nil {
@@ -134,7 +137,7 @@ final class SearchDataManager: NSObject {
         let request = URLRequest(httpMethod: .get, url: .autocomplete(keyword: keyword))
         
         return NetworkManager.shared.request(urlRequest: request) { response in
-            var autocompletes      = [Autocomplete]()
+            var autocompletes      = [HashableAutocomplete]()
             var booksAutocompletes = [BookAutocomplete]()
             
             var currentPage: UInt = 0
@@ -144,15 +147,14 @@ final class SearchDataManager: NSObject {
             
             defer {
                 DispatchQueue.main.async {
-                    self.autocompletes = autocompletes
+                    self.autocompletes2 = autocompletes
                     self.currentPage   = currentPage
                     self.totalCount    = totalCount
                     self.keywordCache  = keyword
-                    
                 
                     NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: errorDetail)
                     
-                    guard autocompletes.isEmpty == false else { return }
+                    guard booksAutocompletes.isEmpty == false else { return }
                     self.updateKeywords(keyword: keyword, currentPage: currentPage, count: count, totalCount: totalCount)
                     self.cache(autocompletes: booksAutocompletes, keyword: keyword)
                 }
@@ -165,15 +167,19 @@ final class SearchDataManager: NSObject {
             
             do {
                 let data = try JSONDecoder().decode(BooksResponse.self, from: decodableData)
-                booksAutocompletes = data.books.map { BookAutocomplete(data: $0) }
                 
-                autocompletes = booksAutocompletes
-                currentPage   = data.page
-                totalCount    = data.total
-                count         = UInt(autocompletes.count)
+                for book in data.books {
+                    let bookAutocomplete = BookAutocomplete(data: book)
+                    booksAutocompletes.append(bookAutocomplete)
+                    autocompletes.append(HashableAutocomplete(data: bookAutocomplete))
+                }
+                
+                currentPage = data.page
+                totalCount  = data.total
+                count       = UInt(autocompletes.count)
                 
                 guard autocompletes.count < data.total else { return }
-                autocompletes.append(LoadingAutocomplete())
+                autocompletes.append(HashableAutocomplete(data: LoadingAutocomplete()))
                 
             } catch {
                 log(.error, error.localizedDescription)
