@@ -221,9 +221,12 @@ final class SearchDataManager: NSObject {
             
             do {
                 let data = try JSONDecoder().decode(BooksResponse.self, from: decodableData)
+                currentPage = data.page
+                totalCount  = data.total
                 
                 if autocompletes.last is LoadingAutocomplete {
                     autocompletes.removeLast()
+                    count = UInt(autocompletes.count)
                 }
                 
                 guard data.books.isEmpty == false else {
@@ -246,9 +249,7 @@ final class SearchDataManager: NSObject {
                 }
                 
                 animations.append(UITableViewAnimationSet(animation: .insertRows, rows: rows))
-                currentPage = data.page
-                totalCount  = data.total
-                count       = UInt(autocompletes.count)
+                count = UInt(autocompletes.count)
                  
                 guard autocompletes.count < data.total else { return }
                 animations.append(UITableViewAnimationSet(animation: .insertRows, rows: [IndexPath(row: autocompletes.count, section: 0)]))
