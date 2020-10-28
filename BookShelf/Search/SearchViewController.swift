@@ -39,6 +39,7 @@ final class SearchViewController: UIViewController {
         super.viewDidLoad()
         
         setSearchView()
+        setTableView()
         
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveAutocompletes(notification:)),    name: SearchNotificationName.autocompletes,     object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveUpdate(notification:)),           name: SearchNotificationName.update,            object: nil)
@@ -66,6 +67,38 @@ final class SearchViewController: UIViewController {
         }
     }
     
+    private func setTableView() {
+        guard #available(iOS 13, *) else { return }
+        
+        dataManager.dataSource = UITableViewDiffableDataSource<Int, HashableAutocomplete>(tableView: tableView) { (tableView, indexPath, itemIdentifier) -> UITableViewCell? in
+            return self.updateCell(indexPath: indexPath)
+        }
+    }
+    
+    private func updateCell(indexPath: IndexPath) -> UITableViewCell {
+        guard indexPath.row < dataManager.autocompletes.count else { return UITableViewCell() }
+        
+        switch dataManager.autocompletes[indexPath.row].data {
+        case let data as KeywordAutocomplete:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: KeywordAutocompleteCell.identifier) as? KeywordAutocompleteCell else { return UITableViewCell() }
+            cell.update(data: data)
+            return cell
+            
+        case let data as BookAutocomplete:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: BookAutocompleteCell.identifier) as? BookAutocompleteCell else { return UITableViewCell() }
+            cell.update(data: data)
+            return cell
+            
+        case is LoadingAutocomplete:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: LoadingAutocompleteCell.identifier) as? LoadingAutocompleteCell else { return UITableViewCell() }
+            cell.update()
+            return cell
+            
+        default:
+            return UITableViewCell()
+        }
+    }
+    
     
     
     // MARK: - Notification
@@ -77,7 +110,28 @@ final class SearchViewController: UIViewController {
             return
         }
         
-        DispatchQueue.main.async { self.tableView.reloadData() }
+        DispatchQueue.main.async {
+            self.tableView.contentOffset.y = 0
+            
+            if #available(iOS 13, *) {
+                guard let dataSource = (self.dataManager.dataSource as? UITableViewDiffableDataSource<Int, HashableAutocomplete>) else {
+                    Toast.show(message: NSLocalizedString("Please check your network connection or try again.", comment: ""))
+                    return
+                }
+                
+                
+                var snapshot = dataSource.snapshot()
+                snapshot.deleteAllItems()
+                snapshot.appendSections([self.dataManager.sectionIdenfication])
+                snapshot.appendItems(self.dataManager.autocompletes)
+                
+                dataSource.defaultRowAnimation = .automatic
+                dataSource.apply(snapshot)
+                
+            } else {
+                self.tableView.reloadData()
+            }
+        }
     }
     
     @objc private func didReceiveUpdate(notification: Notification) {
@@ -88,18 +142,34 @@ final class SearchViewController: UIViewController {
             return
         }
         
-        tableView.beginUpdates()
-        for tableViewAnimation in tableViewAnimations {
-            switch tableViewAnimation.animation {
-            case .insertRows:           tableView.insertRows(at: tableViewAnimation.rows,     with: tableViewAnimation.rowAnimation)
-            case .insertSections:       tableView.insertSections(tableViewAnimation.sections, with: tableViewAnimation.rowAnimation)
-            case .deleteRows:           tableView.deleteRows(at: tableViewAnimation.rows,     with: tableViewAnimation.rowAnimation)
-            case .deleteSections:       tableView.deleteSections(tableViewAnimation.sections, with: tableViewAnimation.rowAnimation)
-            case .reloadRows:           tableView.reloadRows(at: tableViewAnimation.rows,     with: tableViewAnimation.rowAnimation)
-            case .reloadSections:       tableView.reloadSections(tableViewAnimation.sections, with: tableViewAnimation.rowAnimation)
+        if #available(iOS 13, *) {
+            guard let dataSource = (self.dataManager.dataSource as? UITableViewDiffableDataSource<Int, HashableAutocomplete>) else {
+                Toast.show(message: NSLocalizedString("Please check your network connection or try again.", comment: ""))
+                return
             }
+            
+            var snapshot = dataSource.snapshot()
+            snapshot.deleteAllItems()
+            snapshot.appendSections([self.dataManager.sectionIdenfication])
+            snapshot.appendItems(self.dataManager.autocompletes)
+            
+            dataSource.defaultRowAnimation = .top
+            dataSource.apply(snapshot)
+        
+        } else {
+            tableView.beginUpdates()
+            for tableViewAnimation in tableViewAnimations {
+                switch tableViewAnimation.animation {
+                case .insertRows:           tableView.insertRows(at: tableViewAnimation.rows,     with: tableViewAnimation.rowAnimation)
+                case .insertSections:       tableView.insertSections(tableViewAnimation.sections, with: tableViewAnimation.rowAnimation)
+                case .deleteRows:           tableView.deleteRows(at: tableViewAnimation.rows,     with: tableViewAnimation.rowAnimation)
+                case .deleteSections:       tableView.deleteSections(tableViewAnimation.sections, with: tableViewAnimation.rowAnimation)
+                case .reloadRows:           tableView.reloadRows(at: tableViewAnimation.rows,     with: tableViewAnimation.rowAnimation)
+                case .reloadSections:       tableView.reloadSections(tableViewAnimation.sections, with: tableViewAnimation.rowAnimation)
+                }
+            }
+            tableView.endUpdates()
         }
-        tableView.endUpdates()
     }
     
     @objc private func didReceiveKeyboardWillShow(notification: Notification) {
@@ -128,27 +198,7 @@ extension SearchViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard indexPath.row < dataManager.autocompletes.count else { return UITableViewCell() }
-        
-        switch dataManager.autocompletes[indexPath.row] {
-        case let data as KeywordAutocomplete:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: KeywordAutocompleteCell.identifier) as? KeywordAutocompleteCell else { return UITableViewCell() }
-            cell.update(data: data)
-            return cell
-            
-        case let data as BookAutocomplete:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: BookAutocompleteCell.identifier) as? BookAutocompleteCell else { return UITableViewCell() }
-            cell.update(data: data)
-            return cell
-            
-        case is LoadingAutocomplete:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: LoadingAutocompleteCell.identifier) as? LoadingAutocompleteCell else { return UITableViewCell() }
-            cell.update()
-            return cell
-            
-        default:
-            return UITableViewCell()
-        }
+        return updateCell(indexPath: indexPath)
     }
 }
 
@@ -157,7 +207,11 @@ extension SearchViewController: UITableViewDataSource {
 extension SearchViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return dataManager.autocompletes.isEmpty == false ? 35.0 : .leastNormalMagnitude
+        if (dataManager.keyword == nil || dataManager.keyword == "") && dataManager.autocompletes.isEmpty == true {
+            return .leastNormalMagnitude
+        }
+        
+        return 35.0
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -169,15 +223,25 @@ extension SearchViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard dataManager.autocompletes.isEmpty == false else { return nil }
-        
         let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 35.0))
         view.backgroundColor = UIColor(named: "titleBackground")
+        
+            
+        var title: String {
+            guard let data = dataManager.autocompletes.first?.data else {
+                return (dataManager.keyword != nil || dataManager.keyword != "") ? String(format: NSLocalizedString("Total %d results", comment: ""), dataManager.totalCount) : NSLocalizedString("Searched keywords", comment: "")
+            }
+                
+            switch data {
+            case is KeywordAutocomplete:    return NSLocalizedString("Searched keywords", comment: "")
+            default:                        return String(format: NSLocalizedString("Total %d results", comment: ""), dataManager.totalCount)
+            }
+        }
         
         let label = UILabel(frame: CGRect(x: 20, y: 6.0, width: view.frame.width, height: 20.0))
         label.textColor = UIColor(named: "subtitle")
         label.font      = .systemFont(ofSize: 14.0)
-        label.text      = dataManager.autocompletes.first is KeywordAutocomplete ? NSLocalizedString("Searched keywords", comment: "") : String(format: NSLocalizedString("Total %d results", comment: ""), dataManager.totalCount)
+        label.text      = title
         
         view.addSubview(label)
         
@@ -196,7 +260,7 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.row < dataManager.autocompletes.count else { return }
         
-        switch dataManager.autocompletes[indexPath.row] {
+        switch dataManager.autocompletes[indexPath.row].data {
         case let data as KeywordAutocomplete:
             searchController.searchBar.text = data.keyword
             searchController.searchBar.endEditing(true)
@@ -217,7 +281,7 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         guard indexPath.row < dataManager.autocompletes.count else { return false }
         
-        switch dataManager.autocompletes[indexPath.row] {
+        switch dataManager.autocompletes[indexPath.row].data {
         case is KeywordAutocomplete:    return true
         default:                        return false
         }
@@ -247,7 +311,7 @@ extension SearchViewController: UITableViewDataSourcePrefetching {
         for indexPath in indexPaths {
             guard indexPath.row < dataManager.autocompletes.count else { continue }
             
-            switch dataManager.autocompletes[indexPath.row] {
+            switch dataManager.autocompletes[indexPath.row].data {
             case let data as BookAutocomplete:  ImageDataManager.shared.download(url: ImageURL(url: data.imageURL, hash: hash))
             case is LoadingAutocomplete:        dataManager.requestNextPage()
             default:                            continue
@@ -259,7 +323,7 @@ extension SearchViewController: UITableViewDataSourcePrefetching {
         for indexPath in indexPaths {
             guard indexPath.row < dataManager.autocompletes.count else { continue }
             
-            switch dataManager.autocompletes[indexPath.row] {
+            switch dataManager.autocompletes[indexPath.row].data {
             case let data as BookAutocomplete:  ImageDataManager.shared.cancelDownload(url: ImageURL(url: data.imageURL, hash: hash))
             default:                            continue
             }
