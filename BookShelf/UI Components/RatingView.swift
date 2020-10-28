@@ -48,11 +48,22 @@ final class RatingView: UIView {
     // MARK: Private
     private func setView() {
         for i in 0..<5 {
-            let startImageView = UIImageView(image: UIImage(systemName: "star.fill"))
+            let startImageView = UIImageView()
+
+            if #available(iOS 13.0, *) {
+                startImageView.image = UIImage(systemName: "star.fill")
+            }
+                
             startImageView.frame     = CGRect(origin: CGPoint(x: CGFloat(i) * (startSize.width + padding), y: 0), size: startSize)
             startImageView.tintColor = .systemYellow
             
-            let backgroundImageView = UIImageView(image: UIImage(systemName: "star.fill"))
+            
+            let backgroundImageView = UIImageView()
+            
+            if #available(iOS 13.0, *) {
+                backgroundImageView.image = UIImage(systemName: "star.fill")
+            }
+            
             backgroundImageView.frame     = startImageView.frame
             backgroundImageView.tintColor = .systemGray
             

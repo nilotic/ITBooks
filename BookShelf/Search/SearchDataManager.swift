@@ -18,14 +18,17 @@ final class SearchDataManager: NSObject {
     
     // MARK: - Value
     // MARK: Public
-    var dataSource: UITableViewDiffableDataSource<Int, HashableAutocomplete>? = nil
+    var dataSource: Any? = nil
     
-    private(set) var autocompletes = [Autocomplete]()
-    private(set) var autocompletes2 = [HashableAutocomplete]()
+    private(set) var autocompletes = [HashableAutocomplete]()
     private(set) var totalCount: UInt = 0
+    private(set) var sectionIdenfication = 0
     
     var keyword: String? = nil {
-        didSet { request()  }
+        didSet {
+            guard let keyword = keyword, oldValue != keyword else { return }
+            request()
+        }
     }
     
     
@@ -35,7 +38,6 @@ final class SearchDataManager: NSObject {
         return coreDataStack
     }()
 
-    
     private var keywordWorkItem: DispatchWorkItem?    = nil
     private var paginationWorkItem: DispatchWorkItem? = nil
     
@@ -54,6 +56,7 @@ final class SearchDataManager: NSObject {
         }
     }
     private let queue = DispatchQueue(label: "accessQueue")
+    
     
     
     // MARK: - Initializer
@@ -109,7 +112,7 @@ final class SearchDataManager: NSObject {
     
     /// Delete a keyword
     func delete(indexPath: IndexPath) -> Bool {
-        guard indexPath.row < autocompletes.count, let autocomplete = autocompletes[indexPath.row] as? KeywordAutocomplete else { return false }
+        guard indexPath.row < autocompletes.count, let autocomplete = autocompletes[indexPath.row].data as? KeywordAutocomplete else { return false }
         var keywords = searchedKeywords
         
         guard let index = keywords.firstIndex(where: { $0.keyword == autocomplete.keyword }) else { return false }
@@ -126,15 +129,17 @@ final class SearchDataManager: NSObject {
     // MARK: Private
     @discardableResult
     private func requestAutocompletes() -> Bool {
-        guard let keyword = keyword?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed), keyword != "" else {
+        guard let keyword = keyword, let encodedKeyword = keyword.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed), keyword != "" else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 self.autocompletes = []
+                self.sectionIdenfication = Int.random(in: 0...100)
+                
                 NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: nil)
             }
             return false
         }
         
-        let request = URLRequest(httpMethod: .get, url: .autocomplete(keyword: keyword))
+        let request = URLRequest(httpMethod: .get, url: .autocomplete(keyword: encodedKeyword))
         
         return NetworkManager.shared.request(urlRequest: request) { response in
             var autocompletes      = [HashableAutocomplete]()
@@ -147,11 +152,12 @@ final class SearchDataManager: NSObject {
             
             defer {
                 DispatchQueue.main.async {
-                    self.autocompletes2 = autocompletes
-                    self.currentPage   = currentPage
-                    self.totalCount    = totalCount
-                    self.keywordCache  = keyword
-                
+                    self.autocompletes       = autocompletes
+                    self.currentPage         = currentPage
+                    self.totalCount          = totalCount
+                    self.keywordCache        = keyword
+                    self.sectionIdenfication = Int.random(in: 0...100)
+                    
                     NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: errorDetail)
                     
                     guard booksAutocompletes.isEmpty == false else { return }
@@ -169,14 +175,14 @@ final class SearchDataManager: NSObject {
                 let data = try JSONDecoder().decode(BooksResponse.self, from: decodableData)
                 
                 for book in data.books {
-                    let bookAutocomplete = BookAutocomplete(data: book)
-                    booksAutocompletes.append(bookAutocomplete)
-                    autocompletes.append(HashableAutocomplete(data: bookAutocomplete))
+                    let autocomplete = BookAutocomplete(data: book)
+                    booksAutocompletes.append(autocomplete)
+                    autocompletes.append(HashableAutocomplete(data: autocomplete))
                 }
                 
                 currentPage = data.page
                 totalCount  = data.total
-                count       = UInt(autocompletes.count)
+                count       = UInt(booksAutocompletes.count)
                 
                 guard autocompletes.count < data.total else { return }
                 autocompletes.append(HashableAutocomplete(data: LoadingAutocomplete()))
@@ -191,9 +197,9 @@ final class SearchDataManager: NSObject {
     
     @discardableResult
     private func requesNextPage(keyword: String) -> Bool {
-        guard let keyword = keyword.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed), keyword != "" else { return false }
+        guard let encodedKeyword = keyword.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed), keyword != "" else { return false }
         var autocompletes = self.autocompletes
-        let request = URLRequest(httpMethod: .get, url: .autocomplete(keyword: keyword, page: currentPage + 1))
+        let request = URLRequest(httpMethod: .get, url: .autocomplete(keyword: encodedKeyword, page: currentPage + 1))
        
         return NetworkManager.shared.request(urlRequest: request) { response in
             var animations         = [UITableViewAnimationSet]()
@@ -230,7 +236,7 @@ final class SearchDataManager: NSObject {
                 currentPage = data.page
                 totalCount  = data.total
                 
-                if autocompletes.last is LoadingAutocomplete {
+                if autocompletes.last?.data is LoadingAutocomplete {
                     autocompletes.removeLast()
                     count = UInt(autocompletes.count)
                 }
@@ -248,7 +254,7 @@ final class SearchDataManager: NSObject {
                 for (i, book) in data.books.enumerated() {
                     let autocomplete = BookAutocomplete(data: book)
                     booksAutocompletes.append(autocomplete)
-                    autocompletes.append(autocomplete)
+                    autocompletes.append(HashableAutocomplete(data: autocomplete))
                     
                     guard 0 < i else { continue }
                     rows.append(IndexPath(row: lastItemCount + i, section: 0))
@@ -259,7 +265,7 @@ final class SearchDataManager: NSObject {
                  
                 guard autocompletes.count < data.total else { return }
                 animations.append(UITableViewAnimationSet(animation: .insertRows, rows: [IndexPath(row: autocompletes.count, section: 0)]))
-                autocompletes.append(LoadingAutocomplete())
+                autocompletes.append(HashableAutocomplete(data: LoadingAutocomplete()))
                 
             } catch {
                 log(.error, error.localizedDescription)
@@ -276,10 +282,11 @@ final class SearchDataManager: NSObject {
         guard keywords.isEmpty == false else { return }
         
         DispatchQueue.global().async {
-            let autocompletes = keywords.map { KeywordAutocomplete(keyword: $0.keyword) }
+            let autocompletes = keywords.map { HashableAutocomplete(data: KeywordAutocomplete(keyword: $0.keyword)) }
                 
             DispatchQueue.main.async {
                 self.autocompletes = autocompletes
+                self.sectionIdenfication = Int.random(in: 0...100)
                 NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: nil)
             }
         }
@@ -294,7 +301,7 @@ final class SearchDataManager: NSObject {
         return true
         
         #else
-        guard let keyword = keyword?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed), keyword != "", let searchedKeyword = searchedKeywords.first(where: { $0.keyword == keyword }) else { return false }
+        guard let keyword = keyword, keyword != "", let searchedKeyword = searchedKeywords.first(where: { $0.keyword == keyword }) else { return false }
         
         let request: NSFetchRequest<BookEntity> = BookEntity.fetchRequest()
         request.predicate = NSPredicate(format: "%K BEGINSWITH %@", #keyPath(BookEntity.keyword), keyword)
@@ -303,17 +310,18 @@ final class SearchDataManager: NSObject {
             let result = try self.coreDataStack.managedContext.fetch(request)
             
             DispatchQueue.global().async {
-                var autocompletes: [Autocomplete] = result.map { BookAutocomplete(data: $0) }
+                var autocompletes: [HashableAutocomplete] = result.map { HashableAutocomplete(data: BookAutocomplete(data: $0)) }
                 
                 if searchedKeyword.count < searchedKeyword.totalCount {
-                    autocompletes.append(LoadingAutocomplete())
+                    autocompletes.append(HashableAutocomplete(data: LoadingAutocomplete()))
                 }
                 
                 DispatchQueue.main.async {
-                    self.autocompletes = autocompletes
-                    self.currentPage   = searchedKeyword.currentPage
-                    self.totalCount    = searchedKeyword.totalCount
-                    self.keywordCache  = keyword
+                    self.autocompletes       = autocompletes
+                    self.currentPage         = searchedKeyword.currentPage
+                    self.totalCount          = searchedKeyword.totalCount
+                    self.keywordCache        = keyword
+                    self.sectionIdenfication = Int.random(in: 0...100)
                     
                     NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: nil)
                 }

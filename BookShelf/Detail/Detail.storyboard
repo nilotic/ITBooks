@@ -36,7 +36,7 @@
                                                     <constraint firstAttribute="height" constant="1" id="JSB-y2-jD2"/>
                                                 </constraints>
                                             </view>
-                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="C0D-Wa-EdR">
+                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="C0D-Wa-EdR">
                                                 <rect key="frame" x="197" y="93.5" width="20" height="20"/>
                                             </activityIndicatorView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5.0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LFf-lZ-huo">
@@ -193,7 +193,7 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="n6D-ZP-wT5"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="CrB-YW-RpX"/>
                             </scrollView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="owD-c6-nHr">
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="owD-c6-nHr">
                                 <rect key="frame" x="197" y="421" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>

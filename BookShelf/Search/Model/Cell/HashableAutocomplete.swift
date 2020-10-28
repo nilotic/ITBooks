@@ -8,20 +8,20 @@
 import Foundation
 
 struct HashableAutocomplete {
+    let identifier = UUID()
     var data: Autocomplete
-    let uuid = UUID()
 }
 
 extension HashableAutocomplete: Hashable {
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(uuid.uuidString)
+        hasher.combine(identifier)
     }
 }
 
 extension HashableAutocomplete: Equatable {
 
     static func ==(lhs: HashableAutocomplete, rhs: HashableAutocomplete) -> Bool {
-        return lhs.hashValue == rhs.hashValue
+        return lhs.identifier == rhs.identifier
     }
 }
