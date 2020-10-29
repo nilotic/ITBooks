@@ -26,10 +26,7 @@ struct DetailNotificationName {
     // MARK: Public
     func requestDetail() -> Bool {
         guard let isbn = isbn else { return false }
-        
-        var request = URLRequest(httpMethod: .get, url: .detail(isbn: isbn))
-        request.add(value: .applicationJSON,     field: .contentType)
-        request.add(value: .applicationJsonUTF8, field: .accept)
+        let request = URLRequest(httpMethod: .get, url: .detail(isbn: isbn))
         
         return NetworkManager.shared.request(urlRequest: request) { response in
             var detail: DetailResponse? = nil
