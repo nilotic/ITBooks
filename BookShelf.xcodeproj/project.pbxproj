@@ -112,8 +112,6 @@
 		B7ABFB31253ECA5F0019281D /* UITableViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFB2D253ECA5F0019281D /* UITableViewAnimation.swift */; };
 		B7ABFB32253ECA5F0019281D /* UITableViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFB2D253ECA5F0019281D /* UITableViewAnimation.swift */; };
 		B7ABFB33253ECA5F0019281D /* UITableViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFB2D253ECA5F0019281D /* UITableViewAnimation.swift */; };
-		B7D9A6B82548041D00058AE3 /* HashableAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D9A6B72548041D00058AE3 /* HashableAutocomplete.swift */; };
-		B7D9A6B92548041D00058AE3 /* HashableAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D9A6B72548041D00058AE3 /* HashableAutocomplete.swift */; };
 		B7E57587253FFE2B0011A150 /* BookCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E57586253FFE2B0011A150 /* BookCoreDataStack.swift */; };
 		B7E5758F253FFEB20011A150 /* Books.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B7E5758D253FFEB20011A150 /* Books.xcdatamodeld */; };
 		B7E575C725400D210011A150 /* UserDefaultsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E575C625400D210011A150 /* UserDefaultsKey.swift */; };
@@ -201,7 +199,6 @@
 		B7ABFB46253ED9830019281D /* BookshelfUITests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BookshelfUITests-Bridging-Header.h"; sourceTree = "<group>"; };
 		B7ABFB47253ED9830019281D /* Bookshelf-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bookshelf-Bridging-Header.h"; sourceTree = "<group>"; };
 		B7ABFB48253ED9830019281D /* BookshelfTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BookshelfTests-Bridging-Header.h"; sourceTree = "<group>"; };
-		B7D9A6B72548041D00058AE3 /* HashableAutocomplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashableAutocomplete.swift; sourceTree = "<group>"; };
 		B7E57586253FFE2B0011A150 /* BookCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookCoreDataStack.swift; sourceTree = "<group>"; };
 		B7E5758E253FFEB20011A150 /* BookAutocomplete.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BookAutocomplete.xcdatamodel; sourceTree = "<group>"; };
 		B7E575C625400D210011A150 /* UserDefaultsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKey.swift; sourceTree = "<group>"; };
@@ -235,13 +232,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B7A38564254A514500E4B718 /* CoreData */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CoreData;
-			sourceTree = "<group>";
-		};
 		B7ABFA05253EB9FB0019281D = {
 			isa = PBXGroup;
 			children = (
@@ -401,7 +391,6 @@
 			isa = PBXGroup;
 			children = (
 				B7ABFAAE253EBC090019281D /* Autocomplete.swift */,
-				B7D9A6B72548041D00058AE3 /* HashableAutocomplete.swift */,
 				B7E575DA254012DC0011A150 /* KeywordAutocomplete.swift */,
 				B7ABFAB8253EBC220019281D /* BookAutocomplete.swift */,
 				B7ABFAFC253EBFEC0019281D /* LoadingAutocomplete.swift */,
@@ -416,7 +405,6 @@
 				B7ABFAE2253EBD760019281D /* DetailViewController.swift */,
 				B7ABFAE8253EBDA20019281D /* DetailDataManager.swift */,
 				B7ABFB12253EC1D00019281D /* Model */,
-				B7A38564254A514500E4B718 /* CoreData */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -665,7 +653,6 @@
 				B7ABFB14253EC1D00019281D /* DetailResponse.swift in Sources */,
 				B7ABFAE9253EBDA20019281D /* DetailDataManager.swift in Sources */,
 				B7E575EB254021100011A150 /* SearchedKeyword.swift in Sources */,
-				B7D9A6B82548041D00058AE3 /* HashableAutocomplete.swift in Sources */,
 				B7ABFB0A253EC1710019281D /* SegueHandlerType.swift in Sources */,
 				B7ABFA76253EBAFB0019281D /* Toast.swift in Sources */,
 				B7ABFB1C253EC2590019281D /* ImageURL.swift in Sources */,
@@ -700,7 +687,6 @@
 				B7ABFA98253EBAFB0019281D /* ImageDataManager.swift in Sources */,
 				B75BAD0825402B70009293D7 /* Books.xcdatamodeld in Sources */,
 				B7ABFA83253EBAFB0019281D /* HTTPHeaderValue.swift in Sources */,
-				B7D9A6B92548041D00058AE3 /* HashableAutocomplete.swift in Sources */,
 				B7ABFB32253ECA5F0019281D /* UITableViewAnimation.swift in Sources */,
 				B7ABFA71253EBAFA0019281D /* Logger.swift in Sources */,
 				B7ABFB15253EC1D00019281D /* DetailResponse.swift in Sources */,

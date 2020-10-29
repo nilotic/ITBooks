@@ -45,7 +45,7 @@ final class DetailViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveKeyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveKeyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
-        guard dataManager.requestDetail() == true else { return }
+        guard dataManager.request() == true else { return }
         activityIndicatorView.startAnimating()
     }
     
@@ -107,6 +107,10 @@ final class DetailViewController: UIViewController {
         
         // Description
         descriptionLabel.text = data.description
+        
+        
+        // Note
+        textView.text = dataManager.note
     }
     
     private func updateInformation() {
@@ -188,7 +192,9 @@ final class DetailViewController: UIViewController {
     @objc private func didReceiveKeyboardWillShow(notification: Notification) {
         scrollViewBottomConstraint.constant = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect ?? .zero).height
         
-        DispatchQueue.main.async { self.view.layoutIfNeeded() }
+        UIView.animate(withDuration: 0.38) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     @objc private func didReceiveKeyboardWillHide(notification: Notification) {
@@ -234,7 +240,7 @@ final class DetailViewController: UIViewController {
 extension DetailViewController: UITextViewDelegate {
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        DispatchQueue.main.async {
             self.scrollView.setContentOffset(CGPoint(x: 0, y: self.scrollView.contentSize.height - self.scrollView.frame.height), animated: true)
         }
         
@@ -243,6 +249,10 @@ extension DetailViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         dataManager.note = textView.text
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        dataManager.saveNote()
     }
 }
 

@@ -15,9 +15,16 @@ import UIKit
         // Override point for customization after application launch.
         return true
     }
-
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        BookCoreDataStack.shared.save()
+    }
+        
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        BookCoreDataStack.shared.save()
+    }
+    
     // MARK: UISceneSession Lifecycle
-
     @available(iOS 13.0, *)
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.

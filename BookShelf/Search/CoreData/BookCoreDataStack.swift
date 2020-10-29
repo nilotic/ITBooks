@@ -9,6 +9,18 @@ import CoreData
 
 final class BookCoreDataStack {
     
+    // MARK: - Singleton
+    static let shared = BookCoreDataStack()
+        
+    // This prevents others from using the default initializer for this calls
+    private init() {
+        storeContainer.loadPersistentStores { (persistentStoreDescription, error) in
+            guard let error = error else { return }
+            log(.error, error.localizedDescription)
+        }
+    }
+            
+
     // MARK: - Value
     // MARK: Public
     lazy var managedContext: NSManagedObjectContext = {
@@ -36,15 +48,18 @@ final class BookCoreDataStack {
     
     // MARK: - Function
     // MARK: Public
-    func loadPersistentStores(completion: ((Error?) -> Void)? = nil) {
-        storeContainer.loadPersistentStores { (persistentStoreDescription, error) in
-            completion?(error)
+    /// Save a child context
+    func saveContext()  {
+        guard managedContext.hasChanges else { return }
+        
+        managedContext.perform {
+            do { try self.managedContext.save() } catch { log(.error, error.localizedDescription) }
         }
     }
     
-    func saveContext()  {
-        guard managedContext.hasChanges else { return }
-        do { try managedContext.save() } catch { log(.error, error.localizedDescription) }
+    /// Save the parent context
+    func save() {
+        guard storeContainer.viewContext.hasChanges else { return }
+        do { try storeContainer.viewContext.save() } catch { log(.error, error.localizedDescription) }
     }
 }
-
