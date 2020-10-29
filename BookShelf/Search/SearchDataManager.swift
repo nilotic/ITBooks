@@ -20,7 +20,7 @@ final class SearchDataManager: NSObject {
     // MARK: Public
     var dataSource: Any? = nil
     
-    private(set) var autocompletes = [HashableAutocomplete]()
+    private(set) var autocompletes = [Autocomplete]()
     private(set) var totalCount: UInt = 0
     private(set) var sectionIdenfication = 0
     
@@ -33,11 +33,6 @@ final class SearchDataManager: NSObject {
     
     
     // MARK: Private
-    private lazy var coreDataStack: BookCoreDataStack = {
-        let coreDataStack = BookCoreDataStack()
-        return coreDataStack
-    }()
-
     private var keywordWorkItem: DispatchWorkItem?    = nil
     private var paginationWorkItem: DispatchWorkItem? = nil
     
@@ -56,18 +51,6 @@ final class SearchDataManager: NSObject {
         }
     }
     private let queue = DispatchQueue(label: "accessQueue")
-    
-    
-    
-    // MARK: - Initializer
-    override init() {
-        super.init()
-       
-        coreDataStack.loadPersistentStores { error in
-            guard let error = error else { return }
-            log(.error, error.localizedDescription)
-        }
-    }
     
     
     
@@ -112,7 +95,7 @@ final class SearchDataManager: NSObject {
     
     /// Delete a keyword
     func delete(indexPath: IndexPath) -> Bool {
-        guard indexPath.row < autocompletes.count, let autocomplete = autocompletes[indexPath.row].data as? KeywordAutocomplete else { return false }
+        guard indexPath.row < autocompletes.count, let autocomplete = autocompletes[indexPath.row] as? KeywordAutocomplete else { return false }
         var keywords = searchedKeywords
         
         guard let index = keywords.firstIndex(where: { $0.keyword == autocomplete.keyword }) else { return false }
@@ -142,7 +125,7 @@ final class SearchDataManager: NSObject {
         let request = URLRequest(httpMethod: .get, url: .autocomplete(keyword: encodedKeyword))
         
         return NetworkManager.shared.request(urlRequest: request) { response in
-            var autocompletes      = [HashableAutocomplete]()
+            var autocompletes      = [Autocomplete]()
             var booksAutocompletes = [BookAutocomplete]()
             
             var currentPage: UInt = 0
@@ -177,7 +160,7 @@ final class SearchDataManager: NSObject {
                 for book in data.books {
                     let autocomplete = BookAutocomplete(data: book)
                     booksAutocompletes.append(autocomplete)
-                    autocompletes.append(HashableAutocomplete(data: autocomplete))
+                    autocompletes.append(autocomplete)
                 }
                 
                 currentPage = data.page
@@ -185,7 +168,7 @@ final class SearchDataManager: NSObject {
                 count       = UInt(booksAutocompletes.count)
                 
                 guard autocompletes.count < data.total else { return }
-                autocompletes.append(HashableAutocomplete(data: LoadingAutocomplete()))
+                autocompletes.append(LoadingAutocomplete())
                 
             } catch {
                 log(.error, error.localizedDescription)
@@ -236,7 +219,7 @@ final class SearchDataManager: NSObject {
                 currentPage = data.page
                 totalCount  = data.total
                 
-                if autocompletes.last?.data is LoadingAutocomplete {
+                if autocompletes.last is LoadingAutocomplete {
                     autocompletes.removeLast()
                     count = UInt(autocompletes.count)
                 }
@@ -254,7 +237,7 @@ final class SearchDataManager: NSObject {
                 for (i, book) in data.books.enumerated() {
                     let autocomplete = BookAutocomplete(data: book)
                     booksAutocompletes.append(autocomplete)
-                    autocompletes.append(HashableAutocomplete(data: autocomplete))
+                    autocompletes.append(autocomplete)
                     
                     guard 0 < i else { continue }
                     rows.append(IndexPath(row: lastItemCount + i, section: 0))
@@ -265,7 +248,7 @@ final class SearchDataManager: NSObject {
                  
                 guard autocompletes.count < data.total else { return }
                 animations.append(UITableViewAnimationSet(animation: .insertRows, rows: [IndexPath(row: autocompletes.count, section: 0)]))
-                autocompletes.append(HashableAutocomplete(data: LoadingAutocomplete()))
+                autocompletes.append(LoadingAutocomplete())
                 
             } catch {
                 log(.error, error.localizedDescription)
@@ -282,7 +265,7 @@ final class SearchDataManager: NSObject {
         guard keywords.isEmpty == false else { return }
         
         DispatchQueue.global().async {
-            let autocompletes = keywords.map { HashableAutocomplete(data: KeywordAutocomplete(keyword: $0.keyword)) }
+            let autocompletes = keywords.map { KeywordAutocomplete(keyword: $0.keyword) }
                 
             DispatchQueue.main.async {
                 self.autocompletes = autocompletes
@@ -308,11 +291,11 @@ final class SearchDataManager: NSObject {
 
         queue.async {
             do {
-                let result = try self.coreDataStack.managedContext.fetch(request)
-                var autocompletes: [HashableAutocomplete] = result.map { HashableAutocomplete(data: BookAutocomplete(data: $0)) }
+                let result = try BookCoreDataStack.shared.managedContext.fetch(request)
+                var autocompletes: [Autocomplete] = result.map { BookAutocomplete(data: $0) }
                 
                 if searchedKeyword.count < searchedKeyword.totalCount {
-                    autocompletes.append(HashableAutocomplete(data: LoadingAutocomplete()))
+                    autocompletes.append(LoadingAutocomplete())
                 }
                 
                 DispatchQueue.main.async {
@@ -354,7 +337,7 @@ final class SearchDataManager: NSObject {
         
         queue.async {
             for autocomplete in autocompletes {
-                let entity = BookEntity(context: self.coreDataStack.managedContext)
+                let entity = BookEntity(context: BookCoreDataStack.shared.managedContext)
                 entity.keyword  = keyword
                 entity.title    = autocomplete.title
                 entity.subtitle = autocomplete.subtitle
@@ -364,7 +347,7 @@ final class SearchDataManager: NSObject {
                 entity.url      = autocomplete.url
             }
             
-            self.coreDataStack.saveContext()
+            BookCoreDataStack.shared.saveContext()
         }
         #endif
     }
