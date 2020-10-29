@@ -258,7 +258,6 @@ final class SearchDataManager: NSObject {
     
     private func requestSearchedKeywords() {
         let keywords = searchedKeywords
-        guard keywords.isEmpty == false else { return }
         
         DispatchQueue.global().async {
             let autocompletes = keywords.map { KeywordAutocomplete(keyword: $0.keyword) }
@@ -289,7 +288,7 @@ final class SearchDataManager: NSObject {
                 let result = try BookCoreDataStack.shared.managedContext.fetch(request)
                 var autocompletes: [Autocomplete] = result.map { BookAutocomplete(data: $0) }
                 
-                if searchedKeyword.count < searchedKeyword.totalCount {
+                if autocompletes.isEmpty == false, searchedKeyword.count < searchedKeyword.totalCount {
                     autocompletes.append(LoadingAutocomplete())
                 }
                 

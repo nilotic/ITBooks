@@ -45,6 +45,10 @@ final class BookCoreDataStack {
     }()
     
     
+    // MARK: Private
+    private var saveWorkItem: DispatchWorkItem? = nil
+    
+    
     
     // MARK: - Function
     // MARK: Public
@@ -55,11 +59,25 @@ final class BookCoreDataStack {
         managedContext.perform {
             do { try self.managedContext.save() } catch { log(.error, error.localizedDescription) }
         }
+        
+        synchronize()
     }
     
     /// Save the parent context
     func save() {
         guard storeContainer.viewContext.hasChanges else { return }
         do { try storeContainer.viewContext.save() } catch { log(.error, error.localizedDescription) }
+    }
+    
+    
+    // MARK: Private
+    /// Save the parent context  ( Lazy request )
+    private func synchronize() {
+        saveWorkItem?.cancel()
+
+        let workItem = DispatchWorkItem { self.save() }
+        saveWorkItem = workItem
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: workItem)
     }
 }
