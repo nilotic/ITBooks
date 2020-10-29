@@ -168,6 +168,7 @@
                             </tableView>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Ci4-Em-XFc">
                                 <rect key="frame" x="197" y="372" width="20" height="20"/>
+                                <color key="color" name="subtitle"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="At4-wq-o1M"/>

@@ -176,13 +176,17 @@ extension SearchViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if (dataManager.keyword == nil || dataManager.keyword == "") && dataManager.autocompletes.isEmpty == true {
+            return nil
+        }
+        
         let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 35.0))
         view.backgroundColor = UIColor(named: "titleBackground")
         
             
         var title: String {
             guard let data = dataManager.autocompletes.first else {
-                return (dataManager.keyword != nil || dataManager.keyword != "") ? String(format: NSLocalizedString("Total %d results", comment: ""), dataManager.totalCount) : NSLocalizedString("Searched keywords", comment: "")
+                return (dataManager.keyword != nil && dataManager.keyword != "") ? String(format: NSLocalizedString("Total %d results", comment: ""), dataManager.totalCount) : NSLocalizedString("Searched keywords", comment: "")
             }
                 
             switch data {

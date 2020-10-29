@@ -22,11 +22,10 @@ final class SearchDataManager: NSObject {
     
     private(set) var autocompletes = [Autocomplete]()
     private(set) var totalCount: UInt = 0
-    private(set) var sectionIdenfication = 0
     
     var keyword: String? = nil {
         didSet {
-            guard let keyword = keyword, oldValue != keyword else { return }
+            guard oldValue != keyword else { return }
             request()
         }
     }
@@ -115,8 +114,6 @@ final class SearchDataManager: NSObject {
         guard let keyword = keyword, let encodedKeyword = keyword.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed), keyword != "" else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 self.autocompletes = []
-                self.sectionIdenfication = Int.random(in: 0...100)
-                
                 NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: nil)
             }
             return false
@@ -135,11 +132,12 @@ final class SearchDataManager: NSObject {
             
             defer {
                 DispatchQueue.main.async {
-                    self.autocompletes       = autocompletes
-                    self.currentPage         = currentPage
-                    self.totalCount          = totalCount
-                    self.keywordCache        = keyword
-                    self.sectionIdenfication = Int.random(in: 0...100)
+                    guard self.keyword == keyword else { return }
+                    
+                    self.autocompletes = autocompletes
+                    self.currentPage   = currentPage
+                    self.totalCount    = totalCount
+                    self.keywordCache  = keyword
                     
                     NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: errorDetail)
                     
@@ -259,8 +257,6 @@ final class SearchDataManager: NSObject {
     }
     
     private func requestSearchedKeywords() {
-        guard (keyword == nil || keyword == "") else { return }
-        
         let keywords = searchedKeywords
         guard keywords.isEmpty == false else { return }
         
@@ -269,7 +265,6 @@ final class SearchDataManager: NSObject {
                 
             DispatchQueue.main.async {
                 self.autocompletes = autocompletes
-                self.sectionIdenfication = Int.random(in: 0...100)
                 NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: nil)
             }
         }
@@ -299,11 +294,10 @@ final class SearchDataManager: NSObject {
                 }
                 
                 DispatchQueue.main.async {
-                    self.autocompletes       = autocompletes
-                    self.currentPage         = searchedKeyword.currentPage
-                    self.totalCount          = searchedKeyword.totalCount
-                    self.keywordCache        = keyword
-                    self.sectionIdenfication = Int.random(in: 0...100)
+                    self.autocompletes = autocompletes
+                    self.currentPage   = searchedKeyword.currentPage
+                    self.totalCount    = searchedKeyword.totalCount
+                    self.keywordCache  = keyword
                     
                     NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: nil)
                 }
@@ -312,9 +306,9 @@ final class SearchDataManager: NSObject {
                 log(.error, error.localizedDescription)
             }
         }
-        #endif
         
         return true
+        #endif
     }
     
     /// Save searched keywords
