@@ -306,10 +306,9 @@ final class SearchDataManager: NSObject {
         let request: NSFetchRequest<BookEntity> = BookEntity.fetchRequest()
         request.predicate = NSPredicate(format: "%K BEGINSWITH %@", #keyPath(BookEntity.keyword), keyword)
 
-        do {
-            let result = try self.coreDataStack.managedContext.fetch(request)
-            
-            DispatchQueue.global().async {
+        queue.async {
+            do {
+                let result = try self.coreDataStack.managedContext.fetch(request)
                 var autocompletes: [HashableAutocomplete] = result.map { HashableAutocomplete(data: BookAutocomplete(data: $0)) }
                 
                 if searchedKeyword.count < searchedKeyword.totalCount {
@@ -325,16 +324,14 @@ final class SearchDataManager: NSObject {
                     
                     NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: nil)
                 }
+                
+            } catch {
+                log(.error, error.localizedDescription)
             }
-
-            return true
-            
-        } catch {
-            log(.error, error.localizedDescription)
-            return false
         }
         #endif
-       
+        
+        return true
     }
     
     /// Save searched keywords

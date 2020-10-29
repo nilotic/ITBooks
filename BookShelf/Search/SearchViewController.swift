@@ -119,13 +119,12 @@ final class SearchViewController: UIViewController {
                     return
                 }
                 
-                
                 var snapshot = dataSource.snapshot()
                 snapshot.deleteAllItems()
                 snapshot.appendSections([self.dataManager.sectionIdenfication])
                 snapshot.appendItems(self.dataManager.autocompletes)
                 
-                dataSource.defaultRowAnimation = .automatic
+                dataSource.defaultRowAnimation = .top
                 dataSource.apply(snapshot)
                 
             } else {

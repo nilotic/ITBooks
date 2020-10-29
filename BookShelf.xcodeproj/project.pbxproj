@@ -235,6 +235,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B7A38564254A514500E4B718 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		B7ABFA05253EB9FB0019281D = {
 			isa = PBXGroup;
 			children = (
@@ -409,6 +416,7 @@
 				B7ABFAE2253EBD760019281D /* DetailViewController.swift */,
 				B7ABFAE8253EBDA20019281D /* DetailDataManager.swift */,
 				B7ABFB12253EC1D00019281D /* Model */,
+				B7A38564254A514500E4B718 /* CoreData */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
