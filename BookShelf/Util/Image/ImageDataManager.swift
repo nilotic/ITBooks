@@ -22,12 +22,6 @@ final class ImageDataManager: NSObject {
     // MARK: Private
     private lazy var imageCache = NSCache<NSString, UIImage>()
     
-    private lazy var imageManager: PHCachingImageManager = {
-        let imageManager = PHCachingImageManager()
-        imageManager.allowsCachingHighQualityImages = true
-        return imageManager
-    }()
-    
     private lazy var downloadSession: URLSession = {
         let configuration = URLSessionConfiguration.default
         configuration.httpMaximumConnectionsPerHost = 90
