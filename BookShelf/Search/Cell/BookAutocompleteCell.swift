@@ -45,11 +45,11 @@ final class BookAutocompleteCell: UITableViewCell {
         imageURL = ImageURL(url: data.imageURL, hash: hash)
         activityIndicatorView.startAnimating()
         
-        ImageDataManager.shared.download(url: imageURL) { (url, image) in
+        ImageDataManager.shared.download(url: imageURL) { [weak self] (url, image) in
             DispatchQueue.main.async {
-                guard self.imageURL == url else { return }
-                self.activityIndicatorView.stopAnimating()
-                self.bookImageView.image = image
+                guard self?.imageURL == url else { return }
+                self?.activityIndicatorView.stopAnimating()
+                self?.bookImageView.image = image
             }
         }
         

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B70EC66A254CE661006A9BF6 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70EC669254CE661006A9BF6 /* NetworkError.swift */; };
+		B70EC66B254CE661006A9BF6 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70EC669254CE661006A9BF6 /* NetworkError.swift */; };
+		B70EC66C254CE661006A9BF6 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70EC669254CE661006A9BF6 /* NetworkError.swift */; };
 		B75BAD04254029F8009293D7 /* BookCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E57586253FFE2B0011A150 /* BookCoreDataStack.swift */; };
 		B75BAD0825402B70009293D7 /* Books.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B7E5758D253FFEB20011A150 /* Books.xcdatamodeld */; };
 		B75BAD0C25402B8B009293D7 /* SearchDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA51253EBAED0019281D /* SearchDataManager.swift */; };
@@ -63,9 +66,9 @@
 		B7ABFA91253EBAFB0019281D /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA6B253EBAFA0019281D /* Response.swift */; };
 		B7ABFA92253EBAFB0019281D /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA6B253EBAFA0019281D /* Response.swift */; };
 		B7ABFA93253EBAFB0019281D /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA6B253EBAFA0019281D /* Response.swift */; };
-		B7ABFA94253EBAFB0019281D /* ResponseDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA6C253EBAFA0019281D /* ResponseDetail.swift */; };
-		B7ABFA95253EBAFB0019281D /* ResponseDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA6C253EBAFA0019281D /* ResponseDetail.swift */; };
-		B7ABFA96253EBAFB0019281D /* ResponseDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA6C253EBAFA0019281D /* ResponseDetail.swift */; };
+		B7ABFA94253EBAFB0019281D /* ResponseStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA6C253EBAFA0019281D /* ResponseStatus.swift */; };
+		B7ABFA95253EBAFB0019281D /* ResponseStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA6C253EBAFA0019281D /* ResponseStatus.swift */; };
+		B7ABFA96253EBAFB0019281D /* ResponseStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA6C253EBAFA0019281D /* ResponseStatus.swift */; };
 		B7ABFA97253EBAFB0019281D /* ImageDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA6E253EBAFA0019281D /* ImageDataManager.swift */; };
 		B7ABFA98253EBAFB0019281D /* ImageDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA6E253EBAFA0019281D /* ImageDataManager.swift */; };
 		B7ABFA99253EBAFB0019281D /* ImageDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABFA6E253EBAFA0019281D /* ImageDataManager.swift */; };
@@ -144,6 +147,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B70EC669254CE661006A9BF6 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		B7ABFA0E253EB9FB0019281D /* BookShelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookShelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7ABFA11253EB9FB0019281D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B7ABFA13253EB9FB0019281D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -171,7 +175,7 @@
 		B7ABFA68253EBAFA0019281D /* Host.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Host.swift; sourceTree = "<group>"; };
 		B7ABFA69253EBAFA0019281D /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		B7ABFA6B253EBAFA0019281D /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
-		B7ABFA6C253EBAFA0019281D /* ResponseDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseDetail.swift; sourceTree = "<group>"; };
+		B7ABFA6C253EBAFA0019281D /* ResponseStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseStatus.swift; sourceTree = "<group>"; };
 		B7ABFA6E253EBAFA0019281D /* ImageDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDataManager.swift; sourceTree = "<group>"; };
 		B7ABFA6F253EBAFA0019281D /* GIFConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIFConverter.swift; sourceTree = "<group>"; };
 		B7ABFAA4253EBB500019281D /* BookAutocompleteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookAutocompleteCell.swift; sourceTree = "<group>"; };
@@ -351,7 +355,8 @@
 			isa = PBXGroup;
 			children = (
 				B7ABFA6B253EBAFA0019281D /* Response.swift */,
-				B7ABFA6C253EBAFA0019281D /* ResponseDetail.swift */,
+				B7ABFA6C253EBAFA0019281D /* ResponseStatus.swift */,
+				B70EC669254CE661006A9BF6 /* NetworkError.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -627,12 +632,13 @@
 				B7ABFA12253EB9FB0019281D /* AppDelegate.swift in Sources */,
 				B7ABFAFD253EBFEC0019281D /* LoadingAutocomplete.swift in Sources */,
 				B7ABFA7F253EBAFB0019281D /* API.swift in Sources */,
-				B7ABFA94253EBAFB0019281D /* ResponseDetail.swift in Sources */,
+				B7ABFA94253EBAFB0019281D /* ResponseStatus.swift in Sources */,
 				B7ABFA97253EBAFB0019281D /* ImageDataManager.swift in Sources */,
 				B7ABFAC1253EBC610019281D /* Book.swift in Sources */,
 				B7ABFAB9253EBC220019281D /* BookAutocomplete.swift in Sources */,
 				B7ABFA9A253EBAFB0019281D /* GIFConverter.swift in Sources */,
 				B7ABFA88253EBAFB0019281D /* HTTPStatusCode.swift in Sources */,
+				B70EC66A254CE661006A9BF6 /* NetworkError.swift in Sources */,
 				B7E575DB254012DC0011A150 /* KeywordAutocomplete.swift in Sources */,
 				B7ABFA73253EBAFB0019281D /* ToastView.swift in Sources */,
 				B7ABFA91253EBAFB0019281D /* Response.swift in Sources */,
@@ -680,6 +686,7 @@
 				B7ABFAC2253EBC610019281D /* Book.swift in Sources */,
 				B75BAD2225402C62009293D7 /* SegueHandlerType.swift in Sources */,
 				B75BAD2C25402CB3009293D7 /* Autocomplete.swift in Sources */,
+				B70EC66B254CE661006A9BF6 /* NetworkError.swift in Sources */,
 				B7ABFB2F253ECA5F0019281D /* UICollectionViewAnimation.swift in Sources */,
 				B7ABFA29253EB9FC0019281D /* BookShelfTests.swift in Sources */,
 				B7ABFAEA253EBDA20019281D /* DetailDataManager.swift in Sources */,
@@ -692,7 +699,7 @@
 				B7ABFB15253EC1D00019281D /* DetailResponse.swift in Sources */,
 				B7ABFAC5253EBC610019281D /* BooksResponse.swift in Sources */,
 				B75BAD2E25402CB3009293D7 /* LoadingAutocomplete.swift in Sources */,
-				B7ABFA95253EBAFB0019281D /* ResponseDetail.swift in Sources */,
+				B7ABFA95253EBAFB0019281D /* ResponseStatus.swift in Sources */,
 				B75BAD1025402B8F009293D7 /* SearchDataManager.swift in Sources */,
 				B7ABFA89253EBAFB0019281D /* HTTPStatusCode.swift in Sources */,
 				B7ABFA80253EBAFB0019281D /* API.swift in Sources */,
@@ -704,7 +711,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7ABFA84253EBAFB0019281D /* HTTPHeaderValue.swift in Sources */,
-				B7ABFA96253EBAFB0019281D /* ResponseDetail.swift in Sources */,
+				B7ABFA96253EBAFB0019281D /* ResponseStatus.swift in Sources */,
 				B7ABFA7B253EBAFB0019281D /* HTTPHeaderField.swift in Sources */,
 				B7ABFA4D253EBA430019281D /* SearchViewController.swift in Sources */,
 				B75BAD1425402BB9009293D7 /* BookCoreDataStack.swift in Sources */,
@@ -739,6 +746,7 @@
 				B7ABFA87253EBAFB0019281D /* URLRequestExtension.swift in Sources */,
 				B7ABFA75253EBAFB0019281D /* ToastView.swift in Sources */,
 				B7ABFAB1253EBC090019281D /* Autocomplete.swift in Sources */,
+				B70EC66C254CE661006A9BF6 /* NetworkError.swift in Sources */,
 				B7ABFB30253ECA5F0019281D /* UICollectionViewAnimation.swift in Sources */,
 				B7E575E3254013160011A150 /* KeywordAutocompleteCell.swift in Sources */,
 			);

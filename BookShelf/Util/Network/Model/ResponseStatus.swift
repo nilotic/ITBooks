@@ -1,5 +1,5 @@
 //
-//  ResponseDetail.swift
+//  ResponseStatus.swift
 //  Bookshelf
 //
 //  Created by Den Jo on 2020/10/19.
@@ -7,31 +7,30 @@
 
 import Foundation
 
-struct ResponseDetail {
-    var statusCode: HTTPStatusCode?
-    var message: String?
+struct ResponseStatus {
     let code: Int?
+    let message: String?
 }
 
-extension ResponseDetail {
+extension ResponseStatus {
     
-    init(message: String?) {
-        self.message = message
-        code = nil
-    }
-    
-    init(statusCode: HTTPStatusCode?,  message: String?) {
-        self.statusCode = statusCode
-        self.message    = message
-        code = nil
+    init(data: Data?, urlResponse: HTTPURLResponse?) {
+        guard let data = data, let responseStatus = try? JSONDecoder().decode(ResponseStatus.self, from: data) else {
+            message = NSLocalizedString("Please check your network connection or try again.", comment: "")
+            code = nil
+            return
+        }
+        
+        message = responseStatus.message
+        code    = responseStatus.code
     }
 }
 
-extension ResponseDetail: Decodable {
+extension ResponseStatus: Decodable {
     
     private enum Key: String, CodingKey {
-        case message
         case code
+        case message
     }
     
     init(from decoder: Decoder) throws {
@@ -47,6 +46,5 @@ extension ResponseDetail: Decodable {
             message = try container.decode(String.self, forKey: .message)
             
         } catch { message = nil }
-        
     }
 }

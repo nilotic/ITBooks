@@ -22,17 +22,8 @@ final class NetworkManager: NSObject {
     
     // MARK: - Function
     // MARK: Public
-    func request(urlRequest: URLRequest, delegateQueue queue: OperationQueue? = nil, completion: @escaping (_ data: Response?) -> Void) -> Bool {
-        log(.info, """
-                   Request
-                   URL
-                   \(urlRequest.httpMethod ?? "") \(urlRequest.url?.absoluteString ?? "")\n
-                   HeaderField
-                   \(urlRequest.allHTTPHeaderFields?.debugDescription ?? "")\n
-                   Body
-                   \(String(data: urlRequest.httpBody ?? Data(), encoding: .utf8) ?? "")
-                   \n\n
-                   """)
+    func request(urlRequest: URLRequest, delegateQueue queue: OperationQueue? = nil, completion: @escaping (_ result: Result<Response, Error>) -> Void) -> Bool {
+        log(.info, urlRequest.debugDescription)
         
         // Request
         let urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: queue)
@@ -43,29 +34,23 @@ final class NetworkManager: NSObject {
         }
         
         urlSession.dataTask(with: urlRequest, completionHandler: { data, urlResponse, error in
-            let response = Response(data: data, urlResponse: urlResponse as? HTTPURLResponse, error: error)
-            self.handle(urlRequest: urlRequest, response: response)
-            completion(response)
+            guard let response = Response(data: data, urlResponse: urlResponse, error: error) else {
+                completion(.failure(NetworkError(message: NSLocalizedString("Please check your network connection or try again.", comment: ""))))
+                return
+            }
             
+            self.handle(response: response)
+            completion(error == nil ? .success(response) : .failure(NetworkError(data: response)))
+ 
             urlSession.finishTasksAndInvalidate()
         }).resume()
         
         return true
     }
     
-    func request<T: Encodable>(urlRequest: URLRequest, requestData: T, delegateQueue queue: OperationQueue? = nil, completion: @escaping (_ requestData: T, _ data: Response?) -> Void) -> Bool {
+    func request<T: Encodable>(urlRequest: URLRequest, requestData: T, delegateQueue queue: OperationQueue? = nil, completion: @escaping (_ result: Result<Response, Error>) -> Void) -> Bool {
         guard let request = encode(urlRequest: urlRequest, requestData: requestData) else { return false }
-        
-        log(.info, """
-                   Request
-                   URL
-                   \(urlRequest.httpMethod ?? "") \(request.url?.absoluteString ?? "")\n
-                    HeaderField
-                   \(request.allHTTPHeaderFields?.debugDescription ?? "")\n
-                   Body
-                   \(String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "")
-                   \n\n
-                   """)
+        log(.info, request.debugDescription)
         
         // Request
         let urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: queue)
@@ -76,10 +61,14 @@ final class NetworkManager: NSObject {
         }
         
         urlSession.dataTask(with: request, completionHandler: { data, urlResponse, error in
-            let response = Response(data: data, urlResponse: urlResponse as? HTTPURLResponse, error: error)
-            self.handle(urlRequest: urlRequest, response: response)
-            completion(requestData, response)
+            guard let response = Response(data: data, urlResponse: urlResponse, error: error) else {
+                completion(.failure(NetworkError(message: NSLocalizedString("Please check your network connection or try again.", comment: ""))))
+                return
+            }
             
+            self.handle(response: response)
+            completion(error == nil ? .success(response) : .failure(NetworkError(data: response)))
+ 
             urlSession.finishTasksAndInvalidate()
         }).resume()
         
@@ -188,18 +177,13 @@ final class NetworkManager: NSObject {
         return true
     }
     
-    private func handle(urlRequest: URLRequest, response: Response) {
-        guard let urlResponse = response.urlResponse, let statusCode = HTTPStatusCode(rawValue: urlResponse.statusCode), response.error == nil else {
-            log(.error, "Failed to get responseData. Error Description: \(response.error.debugDescription)")
-            return
-        }
-        
-        switch statusCode {
+    private func handle(response: Response) {
+        switch response.statusCode {
         case .ok, .created, .accepted:
             break
        
         case .badRequest:
-            guard let code = response.detail?.code else { break }
+            guard let code = response.code else { break }
             log(.error, code)
 
         case .unauthorized:
@@ -207,31 +191,22 @@ final class NetworkManager: NSObject {
             break
             
         case .forbidden:
-            guard let code = response.detail?.code else { break }
+            guard let code = response.code else { break }
             log(.error, code)
             
         case .preconditionFailed:
-            guard let code = response.detail?.code else { return }
+            guard let code = response.code else { return }
             log(.error, code)
             
         case .serviceUnavailable:
-            guard let code = response.detail?.code else { return }
+            guard let code = response.code else { return }
             log(.error, code)
             
         default:
             break
         }
         
-        log(statusCode == .ok ? .info : .error, """
-                                                Response
-                                                HTTP status: \(statusCode.rawValue)
-                                                URL: \(urlResponse.url?.absoluteString ?? "")\n
-                                                HeaderField
-                                                \(urlResponse.allHeaderFields.debugDescription))\n
-                                                Data
-                                                \(String(data: response.data ?? Data(), encoding: .utf8) ?? "")
-                                                \n
-                                                """ )
+        log(response.statusCode == .ok ? .info : .error, response.debugDescription)
     }
 }
 

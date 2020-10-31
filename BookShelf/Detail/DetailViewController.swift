@@ -76,10 +76,10 @@ final class DetailViewController: UIViewController {
         
         // Image
         imageActivityIndicatorView.startAnimating()
-        ImageDataManager.shared.download(url: ImageURL(url: data.imageURL, hash: hash)) { (url, image) in
+        ImageDataManager.shared.download(url: ImageURL(url: data.imageURL, hash: hash)) { [weak self] (url, image) in
             DispatchQueue.main.async {
-                self.imageActivityIndicatorView.stopAnimating()
-                self.imageView.image = image
+                self?.imageActivityIndicatorView.stopAnimating()
+                self?.imageView.image = image
             }
         }
         
@@ -179,7 +179,8 @@ final class DetailViewController: UIViewController {
         DispatchQueue.main.async { self.activityIndicatorView.stopAnimating() }
         
         guard notification.object == nil else {
-            Toast.show(message: (notification.object as? ResponseDetail)?.message ?? NSLocalizedString("Please check your network connection or try again.", comment: ""))
+            Toast.show(message: (notification.object as? Error)?.localizedDescription)
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                 self.navigationController?.popViewController(animated: true)
             }

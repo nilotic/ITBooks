@@ -26,17 +26,17 @@ struct DetailNotificationName {
     // MARK: - Function
     // MARK: Public
     func request() -> Bool {
-        var detail: DetailResponse?      = nil
-        var note: String?                = nil
-        var errorDetail: ResponseDetail? = nil
+        var detail: DetailResponse? = nil
+        var note: String?           = nil
+        var error: Error?           = nil
         
         let group = DispatchGroup()
         
         // Detail
         group.enter()
-        guard requestDetail(completion: { (data, error) in
-            detail      = data
-            errorDetail = error
+        guard requestDetail(completion: { (data, networkError) in
+            detail = data
+            error  = networkError
             
             group.leave()
             
@@ -62,7 +62,7 @@ struct DetailNotificationName {
             self.detail = detail
             self.note   = note
             
-            NotificationCenter.default.post(name: DetailNotificationName.detail, object: errorDetail)
+            NotificationCenter.default.post(name: DetailNotificationName.detail, object: error)
         }
         return true
     }
@@ -81,28 +81,32 @@ struct DetailNotificationName {
     
     
     // MARK: Private
-    private func requestDetail(completion: @escaping (_ detail: DetailResponse?, _ error: ResponseDetail?) -> Void) -> Bool {
+    private func requestDetail(completion: @escaping (_ detail: DetailResponse?, _ error: Error?) -> Void) -> Bool {
         guard let isbn = isbn else { return false }
         let request = URLRequest(httpMethod: .get, url: .detail(isbn: isbn))
         
-        return NetworkManager.shared.request(urlRequest: request) { response in
+        return NetworkManager.shared.request(urlRequest: request) { result in
             var detail: DetailResponse? = nil
-            var errorDetail: ResponseDetail? = nil
+            var error: Error? = nil
             
-            defer { completion(detail, errorDetail) }
+            defer { completion(detail, error) }
             
-            guard let decodableData = response?.data else {
-                errorDetail = ResponseDetail(message: response?.detail?.message ?? NSLocalizedString("Please check your network connection or try again.", comment: ""))
-                return
-            }
-            
-            do {
-                detail = try JSONDecoder().decode(DetailResponse.self, from: decodableData)
+            switch result {
+            case .success(let response):
+                guard let decodableData = response.data else {
+                    error = NetworkError(message: response.message ?? NSLocalizedString("Please check your network connection or try again.", comment: ""))
+                    return
+                }
                 
-            } catch {
-                log(.error, error.localizedDescription)
-                errorDetail = ResponseDetail(message: error.localizedDescription)
-                return
+                do {
+                    detail = try JSONDecoder().decode(DetailResponse.self, from: decodableData)
+                    
+                } catch (let decodingError) {
+                    error = decodingError
+                }
+                
+            case .failure(let networkError):
+                error = networkError
             }
         }
     }

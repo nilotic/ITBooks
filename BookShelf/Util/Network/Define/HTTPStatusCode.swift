@@ -8,6 +8,7 @@
 import Foundation
 
 enum HTTPStatusCode: Int, Error {
+    case none                           = 0
     case `continue`                     = 100
     case switchingProtocol              = 101
     case processing                     = 102

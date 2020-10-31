@@ -73,7 +73,7 @@ final class SearchViewController: UIViewController {
         DispatchQueue.main.async { self.activityIndicatorView.stopAnimating() }
         
         guard notification.object == nil else {
-            Toast.show(message: (notification.object as? ResponseDetail)?.message ?? NSLocalizedString("Please check your network connection or try again.", comment: ""))
+            Toast.show(message: (notification.object as? Error)?.localizedDescription)
             return
         }
         
@@ -87,7 +87,7 @@ final class SearchViewController: UIViewController {
         activityIndicatorView.stopAnimating()
         
         guard let tableViewAnimations = notification.object as? [UITableViewAnimationSet] else {
-            Toast.show(message: (notification.object as? ResponseDetail)?.message ?? NSLocalizedString("Please check your network connection or try again.", comment: ""))
+            Toast.show(message: (notification.object as? Error)?.localizedDescription)
             return
         }
         

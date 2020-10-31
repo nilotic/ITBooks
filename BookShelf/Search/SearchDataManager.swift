@@ -107,7 +107,7 @@ final class SearchDataManager: NSObject {
         return true
     }
     
-    
+
     // MARK: Private
     @discardableResult
     private func requestAutocompletes() -> Bool {
@@ -121,14 +121,14 @@ final class SearchDataManager: NSObject {
         
         let request = URLRequest(httpMethod: .get, url: .autocomplete(keyword: encodedKeyword))
         
-        return NetworkManager.shared.request(urlRequest: request) { response in
+        return NetworkManager.shared.request(urlRequest: request) { result in
             var autocompletes      = [Autocomplete]()
             var booksAutocompletes = [BookAutocomplete]()
             
             var currentPage: UInt = 0
             var count: UInt       = 0
             var totalCount: UInt  = 0
-            var errorDetail: ResponseDetail? = nil
+            var error: Error?     = nil
             
             defer {
                 DispatchQueue.main.async {
@@ -139,7 +139,7 @@ final class SearchDataManager: NSObject {
                     self.totalCount    = totalCount
                     self.keywordCache  = keyword
                     
-                    NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: errorDetail)
+                    NotificationCenter.default.post(name: SearchNotificationName.autocompletes, object: error)
                     
                     guard booksAutocompletes.isEmpty == false else { return }
                     self.updateKeywords(keyword: keyword, currentPage: currentPage, count: count, totalCount: totalCount)
@@ -147,31 +147,35 @@ final class SearchDataManager: NSObject {
                 }
             }
             
-            guard let decodableData = response?.data else {
-                errorDetail = response?.detail ?? ResponseDetail(message: NSLocalizedString("Please check your network connection or try again.", comment: ""))
-                return
-            }
-            
-            do {
-                let data = try JSONDecoder().decode(BooksResponse.self, from: decodableData)
-                
-                for book in data.books {
-                    let autocomplete = BookAutocomplete(data: book)
-                    booksAutocompletes.append(autocomplete)
-                    autocompletes.append(autocomplete)
+            switch result {
+            case .success(let response):
+                guard let decodableData = response.data else {
+                    error = NetworkError(message: NSLocalizedString("Please check your network connection or try again.", comment: ""))
+                    return
                 }
                 
-                currentPage = data.page
-                totalCount  = data.total
-                count       = UInt(booksAutocompletes.count)
-                
-                guard autocompletes.count < data.total else { return }
-                autocompletes.append(LoadingAutocomplete())
-                
-            } catch {
-                log(.error, error.localizedDescription)
-                errorDetail = ResponseDetail(message: error.localizedDescription)
-                return
+                do {
+                    let data = try JSONDecoder().decode(BooksResponse.self, from: decodableData)
+                    
+                    for book in data.books {
+                        let autocomplete = BookAutocomplete(data: book)
+                        booksAutocompletes.append(autocomplete)
+                        autocompletes.append(autocomplete)
+                    }
+                    
+                    currentPage = data.page
+                    totalCount  = data.total
+                    count       = UInt(booksAutocompletes.count)
+                    
+                    guard autocompletes.count < data.total else { return }
+                    autocompletes.append(LoadingAutocomplete())
+                    
+                } catch (let decodingError) {
+                    error = decodingError
+                }
+                    
+            case .failure(let networkError):
+                error = networkError
             }
         }
     }
@@ -182,14 +186,14 @@ final class SearchDataManager: NSObject {
         var autocompletes = self.autocompletes
         let request = URLRequest(httpMethod: .get, url: .autocomplete(keyword: encodedKeyword, page: currentPage + 1))
        
-        return NetworkManager.shared.request(urlRequest: request) { response in
+        return NetworkManager.shared.request(urlRequest: request) { result in
             var animations         = [UITableViewAnimationSet]()
             var booksAutocompletes = [BookAutocomplete]()
             
             var currentPage: UInt = 0
             var totalCount: UInt  = 0
             var count: UInt       = 0
-            var errorDetail: ResponseDetail? = nil
+            var error: Error?     = nil
             
             defer {
                 DispatchQueue.main.async {
@@ -199,7 +203,7 @@ final class SearchDataManager: NSObject {
                     self.currentPage   = currentPage
                     self.keywordCache  = keyword
                     
-                    NotificationCenter.default.post(name: SearchNotificationName.update, object: errorDetail == nil ? animations : errorDetail)
+                    NotificationCenter.default.post(name: SearchNotificationName.update, object: error == nil ? animations : error)
                     
                     guard autocompletes.isEmpty == false else { return }
                     self.updateKeywords(keyword: keyword, currentPage: currentPage, count: count, totalCount: totalCount)
@@ -207,51 +211,55 @@ final class SearchDataManager: NSObject {
                 }
             }
             
-            guard let decodableData = response?.data else {
-                errorDetail = response?.detail ?? ResponseDetail(message: NSLocalizedString("Please check your network connection or try again.", comment: ""))
-                return
-            }
-            
-            do {
-                let data = try JSONDecoder().decode(BooksResponse.self, from: decodableData)
-                currentPage = data.page
-                totalCount  = data.total
-                
-                if autocompletes.last is LoadingAutocomplete {
-                    autocompletes.removeLast()
-                    count = UInt(autocompletes.count)
-                }
-                
-                guard data.books.isEmpty == false else {
-                    animations.append(UITableViewAnimationSet(animation: .deleteRows, rows: [IndexPath(row: autocompletes.count, section: 0)])) // Remove Indicator animation
+            switch result {
+            case .success(let response):
+                guard let decodableData = response.data else {
+                    error = NetworkError(message: NSLocalizedString("Please check your network connection or try again.", comment: ""))
                     return
                 }
                 
-                animations.append(UITableViewAnimationSet(animation: .reloadRows, rows: [IndexPath(row: autocompletes.count, section: 0)])) // Reload the last cell (indicator -> item)
-                
-                var rows = [IndexPath]()
-                let lastItemCount = autocompletes.count
-                
-                for (i, book) in data.books.enumerated() {
-                    let autocomplete = BookAutocomplete(data: book)
-                    booksAutocompletes.append(autocomplete)
-                    autocompletes.append(autocomplete)
+                do {
+                    let data = try JSONDecoder().decode(BooksResponse.self, from: decodableData)
+                    currentPage = data.page
+                    totalCount  = data.total
                     
-                    guard 0 < i else { continue }
-                    rows.append(IndexPath(row: lastItemCount + i, section: 0))
+                    if autocompletes.last is LoadingAutocomplete {
+                        autocompletes.removeLast()
+                        count = UInt(autocompletes.count)
+                    }
+                    
+                    guard data.books.isEmpty == false else {
+                        animations.append(UITableViewAnimationSet(animation: .deleteRows, rows: [IndexPath(row: autocompletes.count, section: 0)])) // Remove Indicator animation
+                        return
+                    }
+                    
+                    animations.append(UITableViewAnimationSet(animation: .reloadRows, rows: [IndexPath(row: autocompletes.count, section: 0)])) // Reload the last cell (indicator -> item)
+                    
+                    var rows = [IndexPath]()
+                    let lastItemCount = autocompletes.count
+                    
+                    for (i, book) in data.books.enumerated() {
+                        let autocomplete = BookAutocomplete(data: book)
+                        booksAutocompletes.append(autocomplete)
+                        autocompletes.append(autocomplete)
+                        
+                        guard 0 < i else { continue }
+                        rows.append(IndexPath(row: lastItemCount + i, section: 0))
+                    }
+                    
+                    animations.append(UITableViewAnimationSet(animation: .insertRows, rows: rows))
+                    count = UInt(autocompletes.count)
+                     
+                    guard autocompletes.count < data.total else { return }
+                    animations.append(UITableViewAnimationSet(animation: .insertRows, rows: [IndexPath(row: autocompletes.count, section: 0)]))
+                    autocompletes.append(LoadingAutocomplete())
+                    
+                } catch (let decodingError) {
+                    error = decodingError
                 }
                 
-                animations.append(UITableViewAnimationSet(animation: .insertRows, rows: rows))
-                count = UInt(autocompletes.count)
-                 
-                guard autocompletes.count < data.total else { return }
-                animations.append(UITableViewAnimationSet(animation: .insertRows, rows: [IndexPath(row: autocompletes.count, section: 0)]))
-                autocompletes.append(LoadingAutocomplete())
-                
-            } catch {
-                log(.error, error.localizedDescription)
-                errorDetail = ResponseDetail(message: error.localizedDescription)
-                return
+            case .failure(let networkError):
+                error = networkError
             }
         }
     }

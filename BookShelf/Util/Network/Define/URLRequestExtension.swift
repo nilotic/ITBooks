@@ -49,3 +49,20 @@ extension URLRequest {
         addValue(value, forHTTPHeaderField: field.rawValue)
     }
 }
+ 
+
+extension URLRequest {
+    
+    var debugDescription: String {
+        return """
+               Request
+               URL
+               \(httpMethod ?? "") \(url?.absoluteString ?? "")\n
+               HeaderField
+               \(allHTTPHeaderFields?.debugDescription ?? "")\n
+               Body
+               \(String(data: httpBody ?? Data(), encoding: .utf8) ?? "")
+               \n\n
+               """
+    }
+}
