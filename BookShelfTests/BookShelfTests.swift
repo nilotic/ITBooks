@@ -53,7 +53,7 @@ final class BookShelfTests: XCTestCase {
         
         let dataManager = DetailDataManager()
         dataManager.isbn = "9780321856715"
-        XCTAssert(dataManager.requestDetail())
+        XCTAssert(dataManager.request())
         wait(for: [expectation], timeout: 5.0)
     }
 }

@@ -25,4 +25,3 @@ func log(_ type: LogType = .error, _ message: Any?, _ file: String = #file, _ fu
     os_log("%s", "\(logMessage)  ➜  \(message ?? "")\n ‎‎")
     #endif
 }
-

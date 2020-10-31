@@ -21,5 +21,3 @@ final class ToastView: UIView {
         layer.cornerRadius  = bounds.height / 2.0
     }
 }
-
-

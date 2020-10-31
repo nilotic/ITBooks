@@ -1,5 +1,5 @@
 //
-//  GIFConverter.swift
+//  GIF.swift
 //  Bookshelf
 //
 //  Created by Den Jo on 2020/10/19.
@@ -8,11 +8,11 @@
 import UIKit
 import Foundation
 
-struct GIFConverter {
+struct GIF {
     
     // MARK: - Function
     // MARK: Public
-    static func gif(data: Data?) -> UIImage? {
+    static func convert(data: Data?) -> UIImage? {
         guard let data = data, let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
         return animatedImageWithSource(source: source)
     }
@@ -74,30 +74,30 @@ struct GIFConverter {
         guard array.isEmpty == false else { return 1 }
         
         var gcd = array[0]
-        for val in array {
-            gcd = gcdForPair(a: val, b: gcd)
+        for value in array {
+            gcd = gcdForPair(value: value, gcd: gcd)
         }
         
         return gcd
     }
     
-    static private func gcdForPair(a: Int, b: Int) -> Int {
-        var a = a
-        var b = b
+    static private func gcdForPair(value: Int, gcd: Int) -> Int {
+        var value = value
+        var gcd = gcd
         
-        if a < b {
-            let c = a
-            a = b
-            b = c
+        if value < gcd {
+            let c = value
+            value = gcd
+            gcd = c
         }
         
         var rest = 0
         while true {
-            rest = a % b
+            rest = value % gcd
             
-            guard rest != 0 else { return b }
-            a = b
-            b = rest
+            guard rest != 0 else { return gcd }
+            value = gcd
+            gcd = rest
         }
     }
 }

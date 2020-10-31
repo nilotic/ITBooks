@@ -5,7 +5,6 @@
 //  Created by Den Jo on 2020/10/19.
 //
 
-
 import UIKit
 import Foundation
 import MobileCoreServices
@@ -67,7 +66,7 @@ final class ImageDataManager: NSObject {
             // Download image
             let task = self.downloadSession.dataTask(with: URLRequest(url: imageURL)) { (data, response, error) in
                 guard let data = data, error == nil else { return }
-                let image = (response?.url?.lastPathComponent.lowercased().hasSuffix("gif") == true ? GIFConverter.gif(data: data) : UIImage(data: data))
+                let image = (response?.url?.lastPathComponent.lowercased().hasSuffix("gif") == true ? GIF.convert(data: data) : UIImage(data: data))
                 
                 // Cache
                 self.accessQueue.async {

@@ -13,6 +13,7 @@ final class Toast: NSObject {
     private static let shared = Toast()
     
     
+    
     // MARK: - Initializer
     private override init() {   // This prevents others from using the default initializer for this calls
         super.init()
@@ -175,6 +176,7 @@ final class Toast: NSObject {
     }
     
     
+    
     // MARK: - Notification
     @objc private func didReceiveOrientationChanged(notification: Notification) {
         guard let window = UIApplication.shared.windows.first else { return }
@@ -224,4 +226,3 @@ final class Toast: NSObject {
         }
     }
 }
-
