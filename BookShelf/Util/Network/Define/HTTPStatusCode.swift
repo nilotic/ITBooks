@@ -76,3 +76,16 @@ enum HTTPStatusCode: Int, Error {
     case notExtended                    = 510
     case networkAuthenticationRequired  = 511
 }
+
+extension HTTPStatusCode {
+    
+    var isSuccess: Bool {
+        switch self {
+        case .ok, .created, .accepted, .nonAuthoritativeInformation, .noContent, .resetContent, .partialContent, .multiStatus, .alreadyReported, .imUsed:
+            return true
+            
+        default:
+            return false
+        }
+    }
+}

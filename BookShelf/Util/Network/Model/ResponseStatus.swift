@@ -36,15 +36,7 @@ extension ResponseStatus: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: Key.self)
         
-        do { code = try container.decode(Int.self, forKey: .code) } catch { code = nil }
-        
-        do {
-            guard code != -99999 else {
-                message = nil
-                return
-            }
-            message = try container.decode(String.self, forKey: .message)
-            
-        } catch { message = nil }
+        do { code    = try container.decode(Int.self, forKey: .code)       } catch { code = nil }
+        do { message = try container.decode(String.self, forKey: .message) } catch { message = nil }
     }
 }

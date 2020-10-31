@@ -10,10 +10,10 @@ import Foundation
 struct Response {
     let url: URL
     let headerFields: [AnyHashable : Any]
-    let data: Data?
-    let code: Int?
-    let message: String?
-    let statusCode: HTTPStatusCode
+    var data: Data?                = nil
+    var code: Int?                 = nil
+    var message: String?           = nil
+    var statusCode: HTTPStatusCode = .none
 }
 
 extension Response {
@@ -24,16 +24,19 @@ extension Response {
         self.url          = url
         self.headerFields = urlResponse.allHeaderFields
         self.data         = data
-    
-        statusCode = HTTPStatusCode(rawValue: urlResponse.statusCode) ?? .none
         
-        guard let data = data, let responseStatus = try? JSONDecoder().decode(ResponseStatus.self, from: data) else {
-            message = error?.localizedDescription ?? NSLocalizedString("Please check your network connection or try again.", comment: "")
-            code = nil
+        guard error == nil else {
+            statusCode = .badRequest
+            message    = NSLocalizedString("Please check your network connection or try again.", comment: "")
             return
         }
+    
+        statusCode = HTTPStatusCode(rawValue: urlResponse.statusCode) ?? .none
+        message    = statusCode.isSuccess == true ? nil : NSLocalizedString("Please check your network connection or try again.", comment: "")
         
-        message = responseStatus.message ?? error?.localizedDescription
+        
+        guard let data = data, let responseStatus = try? JSONDecoder().decode(ResponseStatus.self, from: data) else { return }
+        message = message ?? responseStatus.message
         code    = responseStatus.code
     }
 }
