@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Mpj-5z-Prl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Mpj-5z-Prl">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -23,8 +23,33 @@
                                 <color key="separatorColor" name="separator"/>
                                 <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                 <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="KeywordAutocompleteCell" id="DKR-QZ-IUw" customClass="KeywordAutocompleteCell" customModule="BookShelf" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="36.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DKR-QZ-IUw" id="esf-CR-RaJ">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="36.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Keyword" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NtD-1k-LQd">
+                                                    <rect key="frame" x="20" y="10" width="374" height="16"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
+                                                    <color key="textColor" name="title"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="NtD-1k-LQd" firstAttribute="leading" secondItem="esf-CR-RaJ" secondAttribute="leading" constant="20" id="BgS-gA-d7z"/>
+                                                <constraint firstAttribute="bottom" secondItem="NtD-1k-LQd" secondAttribute="bottom" priority="999" constant="10" id="Bmn-xp-Xxa"/>
+                                                <constraint firstItem="NtD-1k-LQd" firstAttribute="top" secondItem="esf-CR-RaJ" secondAttribute="top" constant="10" id="J39-NN-QgV"/>
+                                                <constraint firstAttribute="trailing" secondItem="NtD-1k-LQd" secondAttribute="trailing" constant="20" id="yK2-39-Eqq"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="keywordLabel" destination="NtD-1k-LQd" id="Udh-uA-qUT"/>
+                                        </connections>
+                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="BookAutocompleteCell" rowHeight="100" id="FMY-Ck-h6o" userLabel="BookAutocompleteCell" customClass="BookAutocompleteCell" customModule="BookShelf" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="100"/>
+                                        <rect key="frame" x="0.0" y="64.5" width="414" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="FMY-Ck-h6o" id="lTC-dQ-hQf">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
@@ -112,7 +137,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="LoadingAutocompleteCell" rowHeight="50" id="vCs-Z3-1Rg" customClass="LoadingAutocompleteCell" customModule="BookShelf" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="128" width="414" height="50"/>
+                                        <rect key="frame" x="0.0" y="164.5" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vCs-Z3-1Rg" id="cd4-rJ-Fc8">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
@@ -132,31 +157,6 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="activityIndicatorView" destination="c1q-SQ-akH" id="Pyb-ql-IcI"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="KeywordAutocompleteCell" id="DKR-QZ-IUw" customClass="KeywordAutocompleteCell" customModule="BookShelf" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="178" width="414" height="36.5"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DKR-QZ-IUw" id="esf-CR-RaJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="36.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Keyword" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NtD-1k-LQd">
-                                                    <rect key="frame" x="20" y="10" width="374" height="16"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
-                                                    <color key="textColor" name="title"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="NtD-1k-LQd" firstAttribute="leading" secondItem="esf-CR-RaJ" secondAttribute="leading" constant="20" id="BgS-gA-d7z"/>
-                                                <constraint firstAttribute="bottom" secondItem="NtD-1k-LQd" secondAttribute="bottom" priority="999" constant="10" id="Bmn-xp-Xxa"/>
-                                                <constraint firstItem="NtD-1k-LQd" firstAttribute="top" secondItem="esf-CR-RaJ" secondAttribute="top" constant="10" id="J39-NN-QgV"/>
-                                                <constraint firstAttribute="trailing" secondItem="NtD-1k-LQd" secondAttribute="trailing" constant="20" id="yK2-39-Eqq"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="keywordLabel" destination="NtD-1k-LQd" id="Udh-uA-qUT"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
