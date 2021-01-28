@@ -75,7 +75,7 @@ final class NetworkManager: NSObject {
         return true
     }
     
-    func encode<T: Encodable>(urlRequest: URLRequest, requestData: T) -> URLRequest? {
+    private func encode<T: Encodable>(urlRequest: URLRequest, requestData: T) -> URLRequest? {
         var request = urlRequest
         
         guard let httpMethod = HTTPMethod(request: request) else {
